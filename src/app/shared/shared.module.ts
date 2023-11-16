@@ -1,0 +1,34 @@
+import { Module } from '@nestjs/common';
+import { UserRepository, DalService, OrganizationRepository, EnvironmentRepository, LogRepository } from '../../dal';
+
+import * as packageJson from '../../../package.json';
+import { createNestLoggingModuleOptions, LoggerModule } from '../../application-generic/logging';
+import { cacheService, InvalidateCacheService } from '../../application-generic';
+
+const DAL_MODELS = [UserRepository, OrganizationRepository, EnvironmentRepository, LogRepository];
+
+const dalService = {
+  provide: DalService,
+  useFactory: async () => {
+    const service = new DalService();
+    await service.connect(process.env.MONGO_URL);
+
+    return service;
+  },
+};
+
+const PROVIDERS = [dalService, cacheService, InvalidateCacheService, ...DAL_MODELS];
+
+@Module({
+  imports: [
+    LoggerModule.forRoot(
+      createNestLoggingModuleOptions({
+        serviceName: packageJson.name,
+        version: packageJson.version,
+      }),
+    ),
+  ],
+  providers: [...PROVIDERS],
+  exports: [...PROVIDERS],
+})
+export class SharedModule {}

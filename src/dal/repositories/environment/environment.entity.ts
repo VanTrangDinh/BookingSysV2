@@ -1,0 +1,35 @@
+import { ChangePropsValueType } from '../../index';
+import { Types } from 'mongoose';
+
+export interface IApiKey {
+  key: string;
+  _userId: string;
+}
+
+export interface IWidgetSettings {
+  notificationCenterEncryption: boolean;
+}
+
+export interface IDnsSettings {
+  mxRecordConfigured: boolean;
+  inboundParseDomain: string;
+}
+
+export class EnvironmentEntity {
+  _id: string;
+  name: string;
+  _organizationId: string;
+  identifier: string;
+  apiKeys: IApiKey[];
+  // apiRateLimits?: IApiRateLimits;
+  // widget: IWidgetSettings;
+  // dns?: IDnsSettings;
+  _parentId: string;
+}
+
+export type EnvironmentDBModel = ChangePropsValueType<
+  Omit<EnvironmentEntity, 'apiKeys'>,
+  '_organizationId' | '_parentId'
+> & {
+  apiKeys: IApiKey & { _userId: Types.ObjectId }[];
+};

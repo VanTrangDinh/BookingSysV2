@@ -1,0 +1,47 @@
+// {
+//   "extends": "../../tsconfig.base.json",
+//   "compilerOptions": {
+//     "module": "commonjs",
+//     "declaration": true,
+//     "noImplicitAny": false,
+//     "removeComments": true,
+//     "allowSyntheticDefaultImports": true,
+//     "emitDecoratorMetadata": true,
+//     "experimentalDecorators": true,
+//     "strictNullChecks": true,
+//     "target": "es6",
+//     "esModuleInterop": false,
+//     "sourceMap": true,
+//     "skipLibCheck": true,
+//     "outDir": "./dist",
+//     "baseUrl": "./src",
+//     // "types": ["node", "mocha"]
+//     "types": ["node"]
+//   },
+//   "include": [".eslintrc.js", "src/**/*", "src/**/*.d.ts"],
+//   "exclude": ["node_modules", "**/*.spec.ts", "**/*.e2e.ts"]
+// }
+
+{
+  // "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "noImplicitAny": false,
+    "removeComments": true,
+    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strictNullChecks": true,
+    "target": "es6",
+    "esModuleInterop": false,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "outDir": "./dist",
+    "baseUrl": "./src",
+    "types": ["node"],
+    "resolveJsonModule": true
+  },
+  "include": [".eslintrc.js", "src/**/*", "src/**/*.d.ts"],
+  "exclude": ["node_modules", "**/*.spec.ts", "**/*.e2e.ts"]
+}

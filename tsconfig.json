@@ -1,0 +1,89 @@
+// {
+//   "extends": "../../tsconfig.json",
+//   "compilerOptions": {
+//     // "strict": true,
+//     // "noImplicitAny": true,
+//     "strictNullChecks": true,
+//     "module": "commonjs",
+//     "sourceMap": true,
+//     "allowSyntheticDefaultImports": true,
+//     "emitDecoratorMetadata": true,
+//     "types": ["node", "mocha"],
+//     "target": "es2017",
+//     "allowJs": false,
+//     "esModuleInterop": false,
+//     "declarationMap": true,
+//     "skipLibCheck": true,
+//     "baseUrl": "./",
+//     "paths": {
+//       "@shared/*": ["libs/shared/*"],
+//       "@dal/*": ["libs/dal/*"],
+//       "@application-generic/*": ["libs/application-generic/*"],
+//       "@app/*": ["apps/*"]
+//     }
+//   },
+//   "exclude": ["node_modules"]
+// }
+
+{
+  // "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "strictNullChecks": true,
+    // "noImplicitAny": true,
+    "module": "commonjs",
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
+    "types": ["node", "mocha"],
+    "target": "es2017",
+    "allowJs": false,
+    "esModuleInterop": false,
+    "declarationMap": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+
+    // "strictNullChecks": false,
+    "declaration": true,
+    // "noImplicitAny": false,
+    // "esModuleInterop": true,
+    "downlevelIteration": true,
+    "removeComments": true,
+    // "allowSyntheticDefaultImports": true,
+    // "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    // "suppressImplicitAnyIndexErrors": true,
+    "lib": ["es2015", "dom"],
+    // "target": "es5",
+    "typeRoots": ["./node_modules/@types"],
+    "moduleResolution": "node",
+    "strictPropertyInitialization": false,
+    // "resolveJsonModule": true,
+    // "declarationMap": true,
+    // "skipLibCheck": true,
+    "strictFunctionTypes": true
+  },
+  "exclude": ["node_modules"]
+}
+
+// {
+//   "extends": "../../tsconfig.json",
+//   "compilerOptions": {
+//     // "strictNullChecks": false,
+//     "module": "commonjs",
+//     "moduleResolution": "node",
+//     "sourceMap": true,
+//     "allowSyntheticDefaultImports": true,
+//     "emitDecoratorMetadata": true,
+//     //  "types": ["node", "mocha", "chai", "sinon"],
+//     "types": ["node"],
+//     "target": "es2017",
+//     "allowJs": false,
+//     "esModuleInterop": false,
+//     "declarationMap": true,
+//     "skipLibCheck": true,
+//     // "strict": true,
+//     "removeComments": true,
+//     "experimentalDecorators": true
+//   },
+//   "exclude": ["node_modules"]
+// }
