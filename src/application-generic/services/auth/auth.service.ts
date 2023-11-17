@@ -149,6 +149,7 @@ export class AuthService {
   async validateUser(payload: IJwtPayload): Promise<UserEntity> {
     // We run these in parallel to speed up the query time
     const userPromise = this.getUser({ _id: payload._id });
+
     // const isMemberPromise = payload.organizationId
     //   ? this.isAuthenticatedForOrganization(payload._id, payload.organizationId)
     //   : Promise.resolve(true);
@@ -211,7 +212,6 @@ export class AuthService {
       }),
   })
   private async getUser({ _id }: { _id: string }) {
-    console.log('1::::1');
     return await this.userRepository.findById(_id);
   }
 

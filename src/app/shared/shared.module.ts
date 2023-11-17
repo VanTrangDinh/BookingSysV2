@@ -3,7 +3,12 @@ import { UserRepository, DalService, OrganizationRepository, EnvironmentReposito
 
 import * as packageJson from '../../../package.json';
 import { createNestLoggingModuleOptions, LoggerModule } from '../../application-generic/logging';
-import { cacheService, InvalidateCacheService } from '../../application-generic';
+import {
+  cacheService,
+  CacheServiceHealthIndicator,
+  InvalidateCacheService,
+  DalServiceHealthIndicator,
+} from '../../application-generic';
 
 const DAL_MODELS = [UserRepository, OrganizationRepository, EnvironmentRepository, LogRepository];
 
@@ -17,7 +22,14 @@ const dalService = {
   },
 };
 
-const PROVIDERS = [dalService, cacheService, InvalidateCacheService, ...DAL_MODELS];
+const PROVIDERS = [
+  dalService,
+  cacheService,
+  InvalidateCacheService,
+  CacheServiceHealthIndicator,
+  DalServiceHealthIndicator,
+  ...DAL_MODELS,
+];
 
 @Module({
   imports: [

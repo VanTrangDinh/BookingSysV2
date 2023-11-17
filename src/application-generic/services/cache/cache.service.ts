@@ -3,6 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 // import { QUERY_PREFIX } from './key-builders';
 import { CacheInMemoryProviderService, InMemoryProviderClient, Pipeline } from '../in-memory-provider';
 import { addJitter } from '../../resilience';
+import { AnyARecord } from 'dns';
 
 const LOG_CONTEXT = 'CacheService';
 
@@ -70,11 +71,11 @@ export class CacheService implements ICacheService {
     return result;
   }
 
-  // public async setIfNotExist(key: string, value: string, options?: CachingConfig): Promise<string | null> {
-  //   const result = await this.client?.set(key, value, 'EX', this.getTtlInSeconds(options), 'NX');
+  public async setIfNotExist(key: string, value: string, options?: CachingConfig): Promise<string | any> {
+    const result = await this.client?.set(key, value, 'EX', this.getTtlInSeconds(options), 'NX');
 
-  //   return result;
-  // }
+    return result;
+  }
 
   // public async setQuery(key: string, value: string, options?: CachingConfig): Promise<void | unknown[]> {
   //   if (this.client) {

@@ -5,7 +5,7 @@ import { ConnectionOptions } from 'tls';
 export { Redis, RedisOptions, ScanStream };
 
 export const CLIENT_READY = 'ready';
-const DEFAULT_TTL_SECONDS = 60 * 60 * 2;
+const DEFAULT_TTL_SECONDS = 60 * 60 * 2; //time to live, automatically delete when it expires in seconds
 const DEFAULT_CONNECT_TIMEOUT = 50000;
 const DEFAULT_HOST = 'localhost';
 const DEFAULT_KEEP_ALIVE = 30000;
@@ -22,7 +22,7 @@ interface IRedisConfig {
   keyPrefix?: string;
   password?: string;
   port?: string;
-  // tls?: ConnectionOptions;
+  tls?: ConnectionOptions;
   ttl?: string;
 }
 
@@ -36,7 +36,7 @@ export interface IRedisProviderConfig {
   password?: string;
   username?: string;
   port?: number;
-  // tls?: ConnectionOptions;
+  tls?: ConnectionOptions;
   ttl: number; //time to live
 }
 
@@ -51,7 +51,7 @@ export const getRedisProviderConfig = (): IRedisProviderConfig => {
     keepAlive: convertStringValues(process.env.REDIS_KEEP_ALIVE),
     family: convertStringValues(process.env.REDIS_FAMILY),
     keyPrefix: convertStringValues(process.env.REDIS_PREFIX),
-    // tls: process.env.REDIS_TLS as ConnectionOptions,
+    tls: process.env.REDIS_TLS as ConnectionOptions,
   };
 
   const db = redisConfig.db ? Number(redisConfig.db) : undefined;
@@ -63,7 +63,7 @@ export const getRedisProviderConfig = (): IRedisProviderConfig => {
   const keepAlive = redisConfig.keepAlive ? Number(redisConfig.keepAlive) : DEFAULT_KEEP_ALIVE;
   const keyPrefix = redisConfig.keyPrefix ?? DEFAULT_KEY_PREFIX;
   const ttl = redisConfig.ttl ? Number(redisConfig.ttl) : DEFAULT_TTL_SECONDS;
-  // const tls = redisConfig.tls;
+  const tls = redisConfig.tls;
 
   return {
     db,
@@ -75,7 +75,7 @@ export const getRedisProviderConfig = (): IRedisProviderConfig => {
     keepAlive,
     keyPrefix,
     ttl,
-    // tls,
+    tls,
   };
 };
 

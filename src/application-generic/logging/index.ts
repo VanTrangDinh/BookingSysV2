@@ -2,8 +2,10 @@ import { NestInterceptor } from '@nestjs/common';
 import { LoggerErrorInterceptor, Logger, LoggerModule, PinoLogger, getLoggerToken } from 'nestjs-pino';
 import { storage, Store } from 'nestjs-pino/storage';
 import { sensitiveFields } from './masking';
+import pretty from 'pino-pretty';
 
 export * from './LogDecorator';
+
 export function getErrorInterceptor(): NestInterceptor {
   return new LoggerErrorInterceptor();
 }

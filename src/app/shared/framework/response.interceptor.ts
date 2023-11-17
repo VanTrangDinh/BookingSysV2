@@ -26,7 +26,7 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
         return {
           data: isObject(data) ? this.transformResponse(data) : data,
         };
-      })
+      }),
     );
   }
 

@@ -19,8 +19,6 @@ export function CachedEntity({ builder, options }: { builder: (...args) => strin
 
       console.log(`Calling original method: ${methodName}`);
 
-      console.log({ originalMethod });
-
       const cacheService = this.cacheService as CacheService;
 
       const cacheKey = builder(...args);
@@ -38,6 +36,8 @@ export function CachedEntity({ builder, options }: { builder: (...args) => strin
 
       try {
         const value = await cacheService.get(cacheKey);
+
+        console.log({ value });
 
         if (value) {
           return JSON.parse(value);

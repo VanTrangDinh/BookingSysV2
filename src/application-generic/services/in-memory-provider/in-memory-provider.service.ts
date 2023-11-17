@@ -167,8 +167,6 @@ export class InMemoryProviderService {
   //   return client.scanStream({ match: pattern });
   // }
 
-
-
   public async shutdown(): Promise<void> {
     if (this.inMemoryProviderClient) {
       try {

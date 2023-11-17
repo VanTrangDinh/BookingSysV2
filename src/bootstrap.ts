@@ -14,6 +14,7 @@ import { ResponseInterceptor } from './app/shared/framework/response.interceptor
 import { validateEnv } from './config/env-validator';
 import { CONTEXT_PATH } from './config';
 import { RedisIoAdapter } from './app/shared/framework/redis.adapter';
+import { IdempotencyInterceptor } from './app/shared/framework/idempotency.interceptor';
 
 const extendedBodySizeRoutes = ['/v1/events', '/v1/notification-templates', '/v1/workflows', '/v1/layouts'];
 
@@ -47,7 +48,7 @@ export async function bootstrap(expressApp?): Promise<INestApplication> {
 
   app.setGlobalPrefix(CONTEXT_PATH + 'v1');
 
-  // app.use(passport.initialize());
+  app.use(passport.initialize());
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -114,12 +115,7 @@ const corsOptionsDelegate = function (req, callback) {
     methods: ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   };
 
-  if (
-    ['dev', 'test', 'local'].includes(process.env.NODE_ENV)
-    // ||
-    // isWidgetRoute(req.url) ||
-    // isBlueprintRoute(req.url)
-  ) {
+  if (['dev', 'test', 'local'].includes(process.env.NODE_ENV) || isWidgetRoute(req.url) || isBlueprintRoute(req.url)) {
     corsOptions.origin = '*';
   } else {
     corsOptions.origin = [process.env.FRONT_BASE_URL];
@@ -130,10 +126,10 @@ const corsOptionsDelegate = function (req, callback) {
   callback(null, corsOptions);
 };
 
-// function isWidgetRoute(url: string) {
-//   return url.startsWith('/v1/widgets');
-// }
+function isWidgetRoute(url: string) {
+  return url.startsWith('/v1/widgets');
+}
 
-// function isBlueprintRoute(url: string) {
-//   return url.startsWith('/v1/blueprints');
-// }
+function isBlueprintRoute(url: string) {
+  return url.startsWith('/v1/blueprints');
+}
