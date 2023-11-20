@@ -14,7 +14,6 @@ import { ResponseInterceptor } from './app/shared/framework/response.interceptor
 import { validateEnv } from './config/env-validator';
 import { CONTEXT_PATH } from './config';
 import { RedisIoAdapter } from './app/shared/framework/redis.adapter';
-import { IdempotencyInterceptor } from './app/shared/framework/idempotency.interceptor';
 
 const extendedBodySizeRoutes = ['/v1/events', '/v1/notification-templates', '/v1/workflows', '/v1/layouts'];
 
@@ -33,7 +32,7 @@ export async function bootstrap(expressApp?): Promise<INestApplication> {
   // app.useLogger(app.get(PinoLogger));
   app.flushLogs();
 
-  const redisIoAdapter = new RedisIoAdapter(app);
+  // const redisIoAdapter = new RedisIoAdapter(app);
 
   const server = app.getHttpServer();
 
@@ -101,7 +100,7 @@ export async function bootstrap(expressApp?): Promise<INestApplication> {
 
   Logger.log(`Started application in NODE_ENV=${process.env.NODE_ENV} on port ${process.env.PORT}`);
 
-  app.useWebSocketAdapter(redisIoAdapter);
+  // app.useWebSocketAdapter(redisIoAdapter);
 
   return app;
 }

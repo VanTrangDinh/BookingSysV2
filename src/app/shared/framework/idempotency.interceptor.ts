@@ -10,10 +10,11 @@ import {
   UnprocessableEntityException,
   BadRequestException,
   ConflictException,
+  Scope,
 } from '@nestjs/common';
 
 import { Observable, of, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { createHash } from 'crypto';
 import * as jwt from 'jsonwebtoken';
 import { CacheService } from '../../../application-generic';
@@ -30,7 +31,7 @@ const HEADER_KEYS = {
   LINK: 'Link',
 };
 
-const DOCS_LINK = '';
+const DOCS_LINK = 'link';
 
 enum ReqStatusEnum {
   PROGRESS = 'in-progress',
@@ -45,6 +46,7 @@ export class IdempotencyInterceptor implements NestInterceptor {
   async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
     const request = context.switchToHttp().getRequest();
     const idempotencyKey = this.getIdempotencyKey(context);
+
     const isEnabled = process.env.IS_API_IDEMPOTENCY_ENABLED == 'true';
     if (!isEnabled || !idempotencyKey || !['post', 'patch'].includes(request.method.toLowerCase())) {
       return next.handle();
@@ -59,8 +61,6 @@ export class IdempotencyInterceptor implements NestInterceptor {
     }
     const cacheKey = this.getCacheKey(context);
 
-    console.log({ cacheKey });
-
     try {
       const bodyHash = this.hashRequestBody(request.body);
       //if 1st time we are seeing the request, marks the request as in-progress if not, does nothing
@@ -70,6 +70,7 @@ export class IdempotencyInterceptor implements NestInterceptor {
         IDEMPOTENCY_PROGRESS_TTL,
         true,
       );
+
       // Check if the idempotency key is in the cache
       if (isNewReq) {
         return await this.handleNewRequest(context, next, bodyHash);
@@ -96,7 +97,7 @@ export class IdempotencyInterceptor implements NestInterceptor {
     return request.headers[HEADER_KEYS.IDEMPOTENCY_KEY.toLocaleLowerCase()];
   }
 
-  private getReqUser(context: ExecutionContext): any {
+  private getReqUser(context: ExecutionContext): IJwtPayload | null | any {
     const req = context.switchToHttp().getRequest();
     if (req?.user?.organizationId) {
       return req.user;
@@ -123,7 +124,7 @@ export class IdempotencyInterceptor implements NestInterceptor {
     val: { status: ReqStatusEnum; bodyHash: string; data?: any; statusCode?: number },
     ttl: number,
     ifNotExists?: boolean,
-  ): Promise<string | null> {
+  ): Promise<string | null | undefined> {
     try {
       if (ifNotExists) {
         return await this.cacheService.setIfNotExist(key, JSON.stringify(val), { ttl });
@@ -167,6 +168,7 @@ export class IdempotencyInterceptor implements NestInterceptor {
     const data = await this.cacheService.get(cacheKey);
     this.setHeaders(context.switchToHttp().getResponse(), { [HEADER_KEYS.IDEMPOTENCY_KEY]: idempotencyKey });
     const parsed = JSON.parse(data);
+
     if (parsed.status === ReqStatusEnum.PROGRESS) {
       // api call is in progress, so client need to handle this case
       Logger.error(`previous api call in progress rejecting the request. key:${idempotencyKey}`, LOG_CONTEXT);
@@ -211,7 +213,7 @@ export class IdempotencyInterceptor implements NestInterceptor {
     const idempotencyKey = this.getIdempotencyKey(context)!;
 
     return next.handle().pipe(
-      map(async (response) => {
+      mergeMap(async (response) => {
         const httpResponse = context.switchToHttp().getResponse();
         const statusCode = httpResponse.statusCode;
 
@@ -221,8 +223,9 @@ export class IdempotencyInterceptor implements NestInterceptor {
           { status: ReqStatusEnum.SUCCESS, bodyHash, statusCode: statusCode, data: response },
           IDEMPOTENCY_CACHE_TTL,
         );
+
         Logger.verbose(`cached the success response for idempotency key:${idempotencyKey}`, LOG_CONTEXT);
-        this.setHeaders(httpResponse, { [HEADER_KEYS.IDEMPOTENCY_KEY]: idempotencyKey });
+        this.setHeaders(context.switchToHttp().getResponse(), { [HEADER_KEYS.IDEMPOTENCY_KEY]: idempotencyKey });
 
         return response;
       }),
@@ -230,6 +233,7 @@ export class IdempotencyInterceptor implements NestInterceptor {
         const httpException = this.buildError(err);
         // Cache the error response and return it
         const error = err instanceof HttpException ? err : httpException;
+
         this.setCache(
           cacheKey,
           {

@@ -61,7 +61,7 @@ export class CacheService implements ICacheService {
     return isEnabled;
   }
 
-  public async set(key: string, value: string, options?: CachingConfig): Promise<string | any> {
+  public async set(key: string, value: string, options?: CachingConfig): Promise<string | null | undefined> {
     const result = await this.client?.set(key, value, 'EX', this.getTtlInSeconds(options));
 
     if (result === null) {
@@ -71,12 +71,21 @@ export class CacheService implements ICacheService {
     return result;
   }
 
-  public async setIfNotExist(key: string, value: string, options?: CachingConfig): Promise<string | any> {
+  // public async set(key: string, value: string, options?: CachingConfig): Promise<string | any> {
+  //   const result = await this.client?.set(key, value, 'EX', this.getTtlInSeconds(options));
+
+  //   if (result === null) {
+  //     Logger.error(`Set operation for key ${key} was not performed`, LOG_CONTEXT);
+  //   }
+
+  //   return result;
+  // }
+
+  public async setIfNotExist(key: string, value: string, options?: CachingConfig): Promise<string | null | undefined> {
     const result = await this.client?.set(key, value, 'EX', this.getTtlInSeconds(options), 'NX');
 
     return result;
   }
-
   // public async setQuery(key: string, value: string, options?: CachingConfig): Promise<void | unknown[]> {
   //   if (this.client) {
   //     const { credentials, query } = splitKey(key);
@@ -102,7 +111,6 @@ export class CacheService implements ICacheService {
   public async get(key: string): Promise<string | any> {
     return this.client?.get(key);
   }
-
   public async del(key: string | string[]): Promise<number | any> {
     const keys = Array.isArray(key) ? key : [key];
 

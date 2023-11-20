@@ -40,11 +40,13 @@ import { AuthGuard } from '@nestjs/passport';
 import { RefreshTokenResponseDto } from './dtos/refreshToken.response.dto';
 import { UserResponseDto } from '../user/dtos/user.response.dto';
 import { UserSession } from '../shared/framework/user.decorator';
+import { IdempotencyInterceptor } from '../shared/framework/idempotency.interceptor';
 
 @Controller('/auth')
 @UseInterceptors(ClassSerializerInterceptor)
 @ApiTags('Auth')
 // @ApiExcludeController()
+@UseInterceptors(IdempotencyInterceptor)
 export class AuthController {
   constructor(
     private userRegisterUsecase: UserRegister,

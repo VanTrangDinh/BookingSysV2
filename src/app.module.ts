@@ -1,5 +1,14 @@
 import { OrganizationModule } from './app/organization/organization.module';
-import { Module, Logger, DynamicModule, ForwardReference, Provider } from '@nestjs/common';
+import {
+  Module,
+  Logger,
+  DynamicModule,
+  ForwardReference,
+  Provider,
+  NestModule,
+  MiddlewareConsumer,
+  RequestMethod,
+} from '@nestjs/common';
 import { Type } from '@nestjs/common/interfaces/type.interface';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { SharedModule } from './app/shared/shared.module';
@@ -46,6 +55,14 @@ const modules = baseModules.concat(enterpriseModules);
  * Nest is watching for these APP_* providers, and ends up attaching a uuid to the token so that you can have multiple
  * values for the single provider token
  */
+
+/**
+ * Nếu bạn đã đăng ký interceptor bằng cách sử dụng APP_INTERCEPTOR trong file app.module.ts như trước đó, thì bạn
+ * không cần sử dụng app.useGlobalInterceptors() nữa. Đối với trường hợp sử dụng APP_INTERCEPTOR, framework NestJS sẽ
+ * tự động áp dụng interceptor đó global cho tất cả các route trong ứng dụng của bạn.
+ * không cần sử dụng app.useGlobalInterceptors() trong file main.ts hay ở bất kỳ nơi nào khác
+ */
+
 const providers: Provider[] = [
   {
     provide: APP_INTERCEPTOR, //APP_INTERCEPTOR as its token (an identifier for the provider)
@@ -60,7 +77,7 @@ if (process.env.NODE_ENV === 'test') {
 @Module({
   imports: modules,
   controllers: [],
-  providers,
+  providers: [],
 })
 export class AppModule {
   constructor() {
