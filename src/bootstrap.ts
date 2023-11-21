@@ -6,7 +6,7 @@ import helmet from 'helmet';
 import * as passport from 'passport';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 import { Logger as PinoLogger, getErrorInterceptor } from './application-generic/logging';
@@ -14,6 +14,7 @@ import { ResponseInterceptor } from './app/shared/framework/response.interceptor
 import { validateEnv } from './config/env-validator';
 import { CONTEXT_PATH } from './config';
 import { RedisIoAdapter } from './app/shared/framework/redis.adapter';
+import { RolesGuard } from './app/auth/framework/roles.guard';
 
 const extendedBodySizeRoutes = ['/v1/events', '/v1/notification-templates', '/v1/workflows', '/v1/layouts'];
 
@@ -59,7 +60,7 @@ export async function bootstrap(expressApp?): Promise<INestApplication> {
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalInterceptors(getErrorInterceptor());
 
-  // app.useGlobalGuards(new RolesGuard(app.get(Reflector)));
+  app.useGlobalGuards(new RolesGuard(app.get(Reflector)));
   // app.useGlobalGuards(new SubscriberRouteGuard(app.get(Reflector)));
 
   app.use(extendedBodySizeRoutes, bodyParser.json({ limit: '20mb' }));

@@ -12,6 +12,7 @@ import { AuthProviderEnum } from '../../shared';
 import { EnvironmentConfigModule } from '../../config/configEnv.module';
 import { FacebookStrategy, GitHubStrategy, GoogleStrategy, JwtStrategy } from './services/passport';
 import { JwtAuthGuard } from './framework/auth.guard';
+import { RolesGuard } from './framework/roles.guard';
 
 const oauthProviders = [
   { envVar: 'GITHUB_OAUTH_CLIENT_ID', strategy: GitHubStrategy },
@@ -39,8 +40,8 @@ const AUTH_STRATEGIES: Provider[] = oauthProviders
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, CreateUser, JwtStrategy, JwtAuthGuard, ...AUTH_STRATEGIES, ...USE_CASES],
-  exports: [AuthService, CreateUser, JwtAuthGuard, ...USE_CASES],
+  providers: [AuthService, RolesGuard, CreateUser, JwtStrategy, JwtAuthGuard, ...AUTH_STRATEGIES, ...USE_CASES],
+  exports: [AuthService, RolesGuard, CreateUser, JwtAuthGuard, ...USE_CASES],
 })
 export class AuthModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {
