@@ -1,111 +1,62 @@
-// import * as dotenv from 'dotenv';
+import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { getEnvVars } from '../database-config-utils';
 
-// // if (process.env.NODE_ENV === 'dev') {
-// //   dotenv.config({ path: './env/.env.dev' });
-// // }
+// function dbSslConfig(envVars) {
+//   let config = {};
 
-// import 'reflect-metadata';
-// import { DataSource, DataSourceOptions, EntityTarget, ObjectLiteral, Repository } from 'typeorm';
-// // import { ORMLogger } from './utils/ORMLogger';
+//   if (envVars?.DATABASE_URL)
+//     config = {
+//       url: envVars.DATABASE_URL,
+//       ssl: { rejectUnauthorized: false },
+//     };
 
-// export const dataSourceOptions: Map<string, DataSourceOptions> = new Map([
-//   [
-//     'default',
-//     {
-//       type: 'postgres',
-//       host: process.env.DATABASE_HOST,
-//       port: parseInt(process.env.DATABASE_PORT),
-//       username: process.env.DATABASE_USER,
-//       password: process.env.DATABASE_PASSWORD,
-//       database: process.env.DATABASE_NAME,
-//       entities: [__dirname + './../../**/*.entity{.ts,.js}'],
+//   if (envVars?.CA_CERT)
+//     config = {
+//       ...config,
+//       ...{ ssl: { rejectUnauthorized: false, ca: envVars.CA_CERT } },
+//     };
 
-//       synchronize: false,
-//       schema: process.env.DATABASE_SCHEMA,
-//       migrationsRun: false,
-//       migrationsTableName: 'migration_todo',
-//       migrations: ['database/migrations/**/*{.ts,.js}'],
-//       // type: 'postgres',
-//       // host: process.env.DATABASE_HOST || 'localhost',
-//       // port: parseInt(process.env.DATABASE_PORT) || 5432,
-//       // username: process.env.DATABASE_USER || 'postgres',
-//       // password: process.env.DATABASE_PASSWORD || 811212,
-//       // database: process.env.DATABASE_NAME || 'AirbnbBE',
-//       // entities: [__dirname + './../../**/*.entity{.ts,.js}'],
-//       // synchronize: false,
-//       // schema: process.env.DATABASE_SCHEMA,
-//       // migrationsRun: false,
-//       // migrationsTableName: 'migration_todo',
-//       // migrations: ['database/migrations/**/*{.ts,.js}'],
-//     },
-//   ],
-// ]);
-
-// console.log([
-//   'default',
-//   {
-//     type: 'postgres',
-//     host: process.env.DATABASE_HOST,
-//     port: parseInt(process.env.DATABASE_PORT),
-//     username: process.env.DATABASE_USER,
-//     password: process.env.DATABASE_PASSWORD,
-//     database: process.env.DATABASE_NAME,
-//     entities: [__dirname + './../../**/*.entity{.ts,.js}'],
-
-//     synchronize: false,
-//     schema: process.env.DATABASE_SCHEMA,
-//     migrationsRun: false,
-//     migrationsTableName: 'migration_todo',
-//     migrations: ['database/migrations/**/*{.ts,.js}'],
-//   },
-// ]);
-// // to be used instead of getConnectionManager()
-// export class DataSourceManager {
-//   private static instance: DataSourceManager;
-//   private dataSources: Map<string, DataSource> = new Map();
-
-//   private constructor() {}
-
-//   public static getInstance(): DataSourceManager {
-//     if (!DataSourceManager.instance) {
-//       DataSourceManager.instance = new DataSourceManager();
-//     }
-//     return DataSourceManager.instance;
-//   }
-
-//   public async createDataSource(name: string, options?: DataSourceOptions): Promise<DataSource> {
-//     const _options = options || dataSourceOptions.get(name);
-//     return this.dataSources.set(name, await new DataSource(_options).initialize()).get(name);
-//   }
-
-//   public getDataSource(dataSourceName: string): DataSource {
-//     return this.dataSources.get(dataSourceName || 'default');
-//   }
-
-//   private map() {
-//     return Array.from(this.dataSources.values());
-//   }
-
-//   public getActiveDataSources() {
-//     return this.map().filter((ds: DataSource) => ds.isInitialized);
-//   }
-
-//   public debug() {
-//     console.log(
-//       'DataSourceManager.debug',
-//       this.getActiveDataSources().map((ds: DataSource) => {
-//         return { isInitialized: ds.isInitialized, type: ds.options.type, dbName: ds.options.database };
-//       }),
-//     );
-//   }
-
-//   public async destroyDataSources() {
-//     return Promise.all(Array.from(this.dataSources.values()).map((dataStore) => dataStore.destroy()))
-//       .then((data) => {
-//         console.log(`Destroyed (${data.length}) data source`);
-//       })
-//       .catch((errors) => {
-//         console.log('Error: Destroying DataSources:', errors);
-//       });
-//   }
+//   return config;
 // }
+
+function buildConnectionOptions(data): TypeOrmModuleOptions {
+  // const connectionParams = {
+  //   database: data.PG_DB,
+  //   port: +data.PG_PORT || 5432,
+  //   username: data.PG_USER,
+  //   password: data.PG_PASS,
+  //   host: data.PG_HOST,
+  //   connectTimeoutMS: 5000,
+  //   extra: {
+  //     max: 25,
+  //   },
+  //   ...dbSslConfig(data),
+  // };
+
+  return {
+    type: 'postgres',
+    host: '172.24.0.2',
+    port: 5432,
+    username: 'postgres',
+    password: '811212',
+    database: 'AirbnbBE',
+    entities: [__dirname + './../../**/*.entity{.ts,.js}'],
+
+    synchronize: false,
+    // schema: 'public',
+    migrationsRun: false,
+    migrationsTableName: 'migration_todo',
+    migrations: ['src/migrations/**/*{.ts,.js}'],
+  };
+}
+
+function fetchConnectionOptions(type: string): TypeOrmModuleOptions {
+  const data = getEnvVars();
+
+  return buildConnectionOptions(data);
+}
+
+const ormconfig: TypeOrmModuleOptions = fetchConnectionOptions('postgres');
+
+export { ormconfig };
+export default ormconfig;

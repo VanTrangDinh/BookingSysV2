@@ -10,6 +10,7 @@ import {
   DalServiceHealthIndicator,
 } from '../../application-generic';
 
+
 const DAL_MODELS = [UserRepository, OrganizationRepository, EnvironmentRepository, LogRepository];
 
 const dalService = {

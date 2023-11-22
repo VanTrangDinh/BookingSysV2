@@ -20,6 +20,7 @@ import { UserModule } from './app/user/user.module';
 import { IdempotencyInterceptor } from './app/shared/framework/idempotency.interceptor';
 import { TestingModule } from './app/testing/testing.module';
 import { HealthModule } from './app/health/health.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 // import { SharedModule } from './app/shared/shared.module';
 
@@ -45,7 +46,25 @@ const baseModules: Array<Type | DynamicModule | Promise<DynamicModule> | Forward
   // EnvironmentConfigModule,
   TestingModule,
   HealthModule,
+  TypeOrmModule.forRoot({
+    type: 'postgres',
+    host: '172.25.0.2',
+    port: 5432,
+    username: 'postgres',
+    password: '811212',
+    database: 'AirbnbBE',
+    autoLoadEntities: true,
+    synchronize: true,
+  }),
 ];
+
+// DATABASE_HOST=localhost
+// DATABASE_PORT=
+// DATABASE_USER=postgres
+// DATABASE_PASSWORD=811212
+// DATABASE_NAME=AirbnbBE
+// DATABASE_SCHEMA=public
+// DATABASE_SYNCHRONIZE=false
 
 const enterpriseModules = enterpriseImports();
 
