@@ -15,6 +15,12 @@ export class UserRepository extends BaseRepository<UserDBModel, UserEntity, obje
   }
 
   async findByEmail(email: string): Promise<UserEntity | null> {
+    /**
+     * check cache for existing user entity
+     * if not found , get from database and set value in cache
+     * return user
+     */
+
     return this.findOne({
       email,
     });

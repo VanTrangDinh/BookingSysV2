@@ -56,11 +56,6 @@ export class AuthController {
     private authService: AuthService,
   ) {}
   //neu don gian thi de frontend giai quyet logout, con phuc tap hon thi backend se viet api logout
-  // @Get('logout')
-  // @UseGuards(JwtAuthGuard)
-  // async logout() {
-
-  // }
 
   @Get('/refresh')
   @UseGuards(JwtAuthGuard)

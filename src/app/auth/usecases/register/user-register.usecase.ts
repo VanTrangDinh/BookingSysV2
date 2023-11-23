@@ -21,6 +21,9 @@ export class UserRegister {
     const email = normalizeEmail(command.email);
     const existingUser = await this.userRepository.findByEmail(email);
 
+    //with pg
+    
+
     if (existingUser) throw new ApiException('User already exists');
 
     const passwordHash = await bcrypt.hash(command.password, 10);

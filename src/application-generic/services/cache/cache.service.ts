@@ -3,7 +3,6 @@ import { Injectable, Logger } from '@nestjs/common';
 // import { QUERY_PREFIX } from './key-builders';
 import { CacheInMemoryProviderService, InMemoryProviderClient, Pipeline } from '../in-memory-provider';
 import { addJitter } from '../../resilience';
-import { AnyARecord } from 'dns';
 
 const LOG_CONTEXT = 'CacheService';
 

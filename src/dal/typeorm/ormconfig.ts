@@ -1,42 +1,6 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { getEnvVars } from './database-config-utils';
 
-function dbSslConfig(envVars) {
-  let config = {};
-
-  if (envVars?.DATABASE_URL)
-    config = {
-      url: envVars.DATABASE_URL,
-      ssl: { rejectUnauthorized: false },
-    };
-
-  if (envVars?.CA_CERT)
-    config = {
-      ...config,
-      ...{ ssl: { rejectUnauthorized: false, ca: envVars.CA_CERT } },
-    };
-
-  return config;
-}
-
-// function tooljetDbSslConfig(envVars) {
-//   let config = {};
-
-//   if (envVars?.TOOLJET_DB_URL)
-//     config = {
-//       url: envVars.TOOLJET_DB_URL,
-//       ssl: { rejectUnauthorized: false },
-//     };
-
-//   if (envVars?.CA_CERT)
-//     config = {
-//       ...config,
-//       ...{ ssl: { rejectUnauthorized: false, ca: envVars.CA_CERT } },
-//     };
-
-//   return config;
-// }
-
 function buildConnectionOptions(data): TypeOrmModuleOptions {
   const connectionParams = {
     database: data.PG_DB,
@@ -48,7 +12,6 @@ function buildConnectionOptions(data): TypeOrmModuleOptions {
     extra: {
       max: 25,
     },
-    ...dbSslConfig(data),
   };
 
   const entitiesDir =
@@ -74,7 +37,6 @@ function fetchConnectionOptions(type: string): TypeOrmModuleOptions {
 }
 
 const ormconfig: TypeOrmModuleOptions = fetchConnectionOptions('postgres');
-const tooljetDbOrmconfig: TypeOrmModuleOptions = fetchConnectionOptions('tooljetDb');
 
-export { ormconfig, tooljetDbOrmconfig };
+export { ormconfig };
 export default ormconfig;
