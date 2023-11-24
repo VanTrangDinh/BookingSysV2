@@ -23,6 +23,7 @@ import { HealthModule } from './app/health/health.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { KnexModule } from 'nest-knexjs';
 import ormconfig from './dal/typeorm/ormconfig';
+import { InfraModule } from './dal/infra/infra.module';
 
 // import { SharedModule } from './app/shared/shared.module';
 
@@ -48,31 +49,7 @@ const baseModules: Array<Type | DynamicModule | Promise<DynamicModule> | Forward
   // EnvironmentConfigModule,
   TestingModule,
   HealthModule,
-  // TypeOrmModule.forRoot(ormconfig),
-  // KnexModule.forRoot({
-  //   config: {
-  //     client: 'postgresql',
-  //     useNullAsDefault: true,
-  //     connection: {
-  //       host: '127.0.0.2',
-  //       port: 5432,
-  //       user: 'postgres',
-  //       password: '811212',
-  //       database: 'AirbnbBE',
-  //     },
-  //   },
-  // }),
-  // TypeOrmModule.forRoot({
-  //   type: 'postgres',
-  //   host: '172.25.0.2',
-  //   port: 5432,
-  //   username: 'postgres',
-  //   password: '811212',
-  //   database: 'AirbnbBE',
-  //   autoLoadEntities: true,
-  //   synchronize: true,
-  // }),
-  // DomainModule.register({ imports: [InfraModule] }),
+  InfraModule,
 ];
 
 const enterpriseModules = enterpriseImports();

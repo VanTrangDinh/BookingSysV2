@@ -1,17 +1,24 @@
-import { Module } from '@nestjs/common';
+import { Global, Module, Provider } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { databaseConfig } from './database.config';
+import { databaseConfig, getTypeOrmModuleOptions } from './database.config';
+import { databaseEntities } from './entities';
+import { UserRepository } from './repositories';
 
 const imports = [
-  // ConfigModule.forRoot(immichAppConfig),
-  TypeOrmModule.forRoot(databaseConfig),
-  // TypeOrmModule.forFeature(databaseEntities),
-  // ScheduleModule,
+  TypeOrmModule.forRootAsync({
+    useFactory: getTypeOrmModuleOptions,
+  }),
+  TypeOrmModule.forFeature(databaseEntities),
 ];
 
+const providers: Provider[] = [UserRepository];
+
+const moduleExports = [...providers];
+
+@Global()
 @Module({
   imports,
-  providers: [],
-  exports: [],
+  providers: providers,
+  exports: moduleExports,
 })
 export class InfraModule {}

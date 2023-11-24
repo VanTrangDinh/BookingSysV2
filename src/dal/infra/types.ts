@@ -1,4 +1,4 @@
-import { ID } from '../types';
+export type ID = string | number;
 
 export type Data = Record<string, unknown>;
 

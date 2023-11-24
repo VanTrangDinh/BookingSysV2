@@ -1,5 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { EnvironmentEntity, EnvironmentRepository, IApiKey, UserEntity, UserRepository } from '../../../dal';
+
 import { JwtService } from '@nestjs/jwt';
 import { PinoLogger } from '../../logging';
 import { AuthProviderEnum, IJwtPayload } from '../../../shared';
@@ -7,6 +8,20 @@ import { normalizeEmail } from '../../../app/shared/helpers/email-normalization.
 import { CreateUser, CreateUserCommand } from '../../usecases/create-user';
 import { ApiException } from '../../../app/shared/exceptions/api.exception';
 import { CachedEntity, buildAuthServiceKey, buildUserKey } from '../cache';
+import { CryptoRepository } from '../../../dal/infra/repositories';
+import { UserTokenRepository } from '../../../dal/infra/repositories/user-token.repository';
+
+export interface LoginDetails {
+  isSecure: boolean;
+  clientIp: string;
+  deviceType: string;
+  deviceOS: string;
+}
+
+export enum AuthType {
+  PASSWORD = 'password',
+  OAUTH = 'oauth',
+}
 
 @Injectable()
 export class AuthService {
@@ -16,6 +31,8 @@ export class AuthService {
     private jwtService: JwtService,
     private createUserUsecase: CreateUser,
     private environmentRepository: EnvironmentRepository,
+    private cryptoRepository: CryptoRepository,
+    private userTokenRepository: UserTokenRepository,
   ) {}
 
   async authenticate(
@@ -108,6 +125,22 @@ export class AuthService {
   async generateUserToken(user: UserEntity) {
     return this.getSignedToken(user);
   }
+
+  async generateUserTokenV2(user: UserEntity) {
+    return this.getSignedToken(user);
+  }
+
+  // async getSignedTokenV2(user: UserEntity) {
+  //   const key = this.cryptoRepository.randomBytes(32).toString('base64').replace(/\W/g, '');
+  //   const token = this.cryptoRepository.hashSha256(key);
+  //   await this.userTokenRepository.create({
+  //     token,
+  //     user,
+  //   });
+
+  //   return token;
+  //   // const response = mapLoginResponse(user, key);
+  // }
 
   async getSignedToken(user: UserEntity, organizationId?: string): Promise<string> {
     return this.jwtService.sign(

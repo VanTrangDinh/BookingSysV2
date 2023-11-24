@@ -9,7 +9,7 @@ import {
   InvalidateCacheService,
   DalServiceHealthIndicator,
 } from '../../application-generic';
-
+// import { InfraModule } from '../../dal/infra/infra.module';
 
 const DAL_MODELS = [UserRepository, OrganizationRepository, EnvironmentRepository, LogRepository];
 
@@ -34,6 +34,7 @@ const PROVIDERS = [
 
 @Module({
   imports: [
+    // InfraModule,
     LoggerModule.forRoot(
       createNestLoggingModuleOptions({
         serviceName: packageJson.name,

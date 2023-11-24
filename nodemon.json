@@ -1,6 +1,6 @@
 {
   "watch": ["src", "../core/dist", "api"],
-  "ext": "ts",
+  "ext": ".ts,.js",
   "delay": 2,
   "ignoreRoot": [".git"],
   "ignore": ["src/**/*.spec.ts"],

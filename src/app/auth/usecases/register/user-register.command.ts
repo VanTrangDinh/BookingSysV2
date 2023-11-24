@@ -12,6 +12,9 @@ export class UserRegisterCommand extends BaseCommand {
   password: string;
 
   @IsDefined()
+  phone: number;
+
+  @IsDefined()
   firstName: string;
 
   @IsOptional()

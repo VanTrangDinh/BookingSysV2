@@ -1,5 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsDefined, IsEmail, IsOptional, MinLength, Matches, MaxLength, IsString, IsEnum } from 'class-validator';
+import {
+  IsDefined,
+  IsEmail,
+  IsOptional,
+  MinLength,
+  Matches,
+  MaxLength,
+  IsString,
+  IsEnum,
+  IsNumber,
+} from 'class-validator';
 import { passwordConstraints } from '../../shared/helpers';
 
 export class UserRegistrationBodyDto {
@@ -26,6 +36,10 @@ export class UserRegistrationBodyDto {
   //     'The password must contain minimum 8 and maximum 64 characters, at least one uppercase letter, one lowercase letter, one number and one special character #?!@$%^&*()-',
   // })
   password: string;
+
+  @ApiProperty({ required: true, description: 'Number phone of the user', example: 1234567890 })
+  @IsDefined()
+  phone: number;
 
   @ApiProperty({
     required: true,

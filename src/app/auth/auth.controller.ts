@@ -21,7 +21,7 @@ import {
   ApiResponseProperty,
   ApiTags,
 } from '@nestjs/swagger';
-import { UserRegister } from './usecases/register/user-register.usecase';
+// import { UserRegister } from './usecases/register/user-register.usecase';
 import { UserRegistrationBodyDto } from './dtos/user-register.dto';
 import { UserRegisterCommand } from './usecases/register/user-register.command';
 import { LoginBodyDto } from './dtos/login.dto';
@@ -41,6 +41,7 @@ import { RefreshTokenResponseDto } from './dtos/refreshToken.response.dto';
 import { UserResponseDto } from '../user/dtos/user.response.dto';
 import { UserSession } from '../shared/framework/user.decorator';
 import { IdempotencyInterceptor } from '../shared/framework/idempotency.interceptor';
+import { UserRegister } from './usecases/register/user-register-v2.usecase';
 
 @Controller('/auth')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -166,8 +167,8 @@ export class AuthController {
         password: body.password,
         firstName: body.firstName,
         lastName: body.lastName,
+        phone: body.phone,
         organizationName: body.organizationName,
-        // origin: body.origin,
       }),
     );
   }
