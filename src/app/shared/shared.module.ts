@@ -9,9 +9,18 @@ import {
   InvalidateCacheService,
   DalServiceHealthIndicator,
 } from '../../application-generic';
+import { HostRepository } from '../../dal/repositories/host';
+import { ListingRepository } from '../../dal/repositories/listing';
 // import { InfraModule } from '../../dal/infra/infra.module';
 
-const DAL_MODELS = [UserRepository, OrganizationRepository, EnvironmentRepository, LogRepository];
+const DAL_MODELS = [
+  UserRepository,
+  OrganizationRepository,
+  EnvironmentRepository,
+  LogRepository,
+  HostRepository,
+  ListingRepository,
+];
 
 const dalService = {
   provide: DalService,

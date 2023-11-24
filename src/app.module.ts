@@ -49,7 +49,7 @@ const baseModules: Array<Type | DynamicModule | Promise<DynamicModule> | Forward
   // EnvironmentConfigModule,
   TestingModule,
   HealthModule,
-  InfraModule,
+  // InfraModule,
 ];
 
 const enterpriseModules = enterpriseImports();

@@ -22,7 +22,6 @@ export class UserRegister {
     const existingUser = await this.userRepository.findByEmail(email);
 
     //with pg
-    
 
     if (existingUser) throw new ApiException('User already exists');
 
@@ -30,22 +29,14 @@ export class UserRegister {
 
     const user = await this.userRepository.create({
       email,
+      phone: command.phone,
       firstName: command.firstName.toLowerCase(),
       lastName: command.lastName?.toLowerCase(),
       password: passwordHash,
+      roles: command.roles,
     });
 
-    //create organization
-
-    let organization: OrganizationEntity;
-    if (command.organizationName) {
-      organization = await this.createOrganizationUsecase.execute(
-        CreateOrganizationCommand.create({
-          name: command.organizationName,
-          userId: user._id,
-        }),
-      );
-    }
+    //verify phone number is valid
 
     return {
       user: await this.userRepository.findById(user._id),

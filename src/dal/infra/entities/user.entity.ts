@@ -13,7 +13,7 @@ export class UserEntity {
   @Column({ nullable: true })
   lastName?: string;
 
-  @Column()
+  @Column({ nullable: true })
   email: string;
 
   @Column({ nullable: true })

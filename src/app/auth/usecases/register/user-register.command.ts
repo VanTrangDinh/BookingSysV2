@@ -1,5 +1,6 @@
 import { IsDefined, IsEmail, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
 import { BaseCommand } from '../../../shared/command/base.command';
+import { UserRoleEnum } from '../../../../shared';
 
 export class UserRegisterCommand extends BaseCommand {
   @IsDefined()
@@ -23,6 +24,6 @@ export class UserRegisterCommand extends BaseCommand {
   @IsOptional()
   organizationName?: string;
 
-  // @IsOptional()
-  // origin?: SignUpOriginEnum;
+  @IsDefined()
+  roles?: UserRoleEnum;
 }

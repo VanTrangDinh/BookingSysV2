@@ -11,6 +11,7 @@ import {
   IsNumber,
 } from 'class-validator';
 import { passwordConstraints } from '../../shared/helpers';
+import { UserRoleEnum } from '../../../shared';
 
 export class UserRegistrationBodyDto {
   @ApiProperty({
@@ -66,7 +67,7 @@ export class UserRegistrationBodyDto {
   @IsString()
   organizationName: string;
 
-  // @IsOptional()
-  // @IsEnum(SignUpOriginEnum)
-  // origin?: SignUpOriginEnum;
+  @IsOptional()
+  @IsEnum(UserRoleEnum)
+  roles?: UserRoleEnum;
 }

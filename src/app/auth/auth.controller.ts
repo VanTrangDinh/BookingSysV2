@@ -6,6 +6,7 @@ import {
   Controller,
   Get,
   Logger,
+  Param,
   Post,
   Req,
   Res,
@@ -41,7 +42,8 @@ import { RefreshTokenResponseDto } from './dtos/refreshToken.response.dto';
 import { UserResponseDto } from '../user/dtos/user.response.dto';
 import { UserSession } from '../shared/framework/user.decorator';
 import { IdempotencyInterceptor } from '../shared/framework/idempotency.interceptor';
-import { UserRegister } from './usecases/register/user-register-v2.usecase';
+// import { UserRegister } from './usecases/register/user-register-v2.usecase';
+import { UserRegister } from './usecases/register/user-register.usecase';
 
 @Controller('/auth')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -168,6 +170,7 @@ export class AuthController {
         firstName: body.firstName,
         lastName: body.lastName,
         phone: body.phone,
+        roles: body.roles,
         organizationName: body.organizationName,
       }),
     );

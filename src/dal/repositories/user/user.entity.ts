@@ -1,6 +1,6 @@
 import { Exclude } from 'class-transformer';
 import { UserId } from './types';
-import { AuthProviderEnum } from '../../../shared';
+import { AuthProviderEnum, UserRoleEnum } from '../../../shared';
 
 export interface IUserToken {
   providerId: string;
@@ -30,6 +30,10 @@ export class UserEntity {
 
   email?: string | null;
 
+  phone?: string;
+
+  isPhoneVerified?: boolean;
+
   profilePicture?: string | null;
 
   @Exclude({ toPlainOnly: true })
@@ -49,6 +53,8 @@ export class UserEntity {
   };
 
   servicesHashes?: { intercom?: string };
+
+  roles: UserRoleEnum;
 }
 
 export type UserDBModel = UserEntity;

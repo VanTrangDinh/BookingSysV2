@@ -31,8 +31,6 @@ export class AuthService {
     private jwtService: JwtService,
     private createUserUsecase: CreateUser,
     private environmentRepository: EnvironmentRepository,
-    private cryptoRepository: CryptoRepository,
-    private userTokenRepository: UserTokenRepository,
   ) {}
 
   async authenticate(
@@ -125,22 +123,6 @@ export class AuthService {
   async generateUserToken(user: UserEntity) {
     return this.getSignedToken(user);
   }
-
-  async generateUserTokenV2(user: UserEntity) {
-    return this.getSignedToken(user);
-  }
-
-  // async getSignedTokenV2(user: UserEntity) {
-  //   const key = this.cryptoRepository.randomBytes(32).toString('base64').replace(/\W/g, '');
-  //   const token = this.cryptoRepository.hashSha256(key);
-  //   await this.userTokenRepository.create({
-  //     token,
-  //     user,
-  //   });
-
-  //   return token;
-  //   // const response = mapLoginResponse(user, key);
-  // }
 
   async getSignedToken(user: UserEntity, organizationId?: string): Promise<string> {
     return this.jwtService.sign(

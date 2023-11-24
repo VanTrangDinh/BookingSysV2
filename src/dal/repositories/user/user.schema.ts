@@ -3,12 +3,23 @@ import { Schema } from 'mongoose';
 
 import { UserDBModel } from './user.entity';
 import { schemaOptions } from '../schema-default.options';
+import { UserRoleEnum } from '../../../shared';
 
 const userSchema = new Schema<UserDBModel>(
   {
     firstName: Schema.Types.String,
     lastName: Schema.Types.String,
     email: Schema.Types.String,
+    phone: Schema.Types.String,
+    isPhoneVerified: {
+      type: Schema.Types.Boolean,
+      required: false,
+      default: false,
+    },
+    roles: {
+      type: Schema.Types.String,
+      enum: UserRoleEnum,
+    },
     profilePicture: Schema.Types.String,
     resetToken: Schema.Types.String,
     resetTokenDate: Schema.Types.Date,
