@@ -13,12 +13,18 @@ const lisingSchema = new Schema<ListingDBModel>(
       ref: 'Host',
       index: true,
     },
-    propertyName: Schema.Types.String,
+    propertyName: {
+      type: Schema.Types.String,
+      required: true,
+      index: true,
+    },
 
     zipcode: Schema.Types.Number,
 
-    pathroomCnt: Schema.Types.Number,
-
+    pathroomCnt: {
+      type: Schema.Types.Number,
+      default: 0,
+    },
     roomCnt: Schema.Types.Number,
 
     guestNum: Schema.Types.Number,
@@ -43,8 +49,10 @@ const lisingSchema = new Schema<ListingDBModel>(
       type: Schema.Types.Number,
       default: 0,
     },
-    avgRatings: Schema.Types.Number,
-
+    avgRatings: {
+      type: Schema.Types.Number,
+      default: 0,
+    },
     street: Schema.Types.String,
 
     city: Schema.Types.String,
@@ -62,6 +70,7 @@ const lisingSchema = new Schema<ListingDBModel>(
 lisingSchema.index({
   _hostId: 1,
   _id: 1,
+  propertyName: 1,
 });
 
 lisingSchema.plugin(mongooseDelete, { deletedAt: true, deletedBy: true, overrideMethods: 'all' });

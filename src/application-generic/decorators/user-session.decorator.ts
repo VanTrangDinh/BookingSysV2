@@ -7,7 +7,7 @@ export const UserSession = createParamDecorator((data, ctx) => {
 
   if (ctx.getType() === 'graphql') {
     req = ctx.getArgs()[2].req;
-  } else {  
+  } else {
     req = ctx.switchToHttp().getRequest();
   }
 
@@ -18,6 +18,7 @@ export const UserSession = createParamDecorator((data, ctx) => {
     req.user.id = req.user._id;
     req.user.username = (req.user.firstName || '').trim();
     req.user.domain = req.user.email?.split('@')[1];
+    // req.user.roles = req.user.roles || [];
 
     return req.user;
   }

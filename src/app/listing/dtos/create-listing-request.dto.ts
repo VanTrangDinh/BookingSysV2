@@ -1,7 +1,16 @@
+import { Optional } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDefined, IsString } from 'class-validator';
 
 export class CreateListingRequestDto {
+  @ApiProperty({
+    description:
+      'The internal identifier you used to create this lising, usually correlates to the id the user in your systems',
+  })
+  @IsString()
+  @IsDefined()
+  listingId: string;
+
   @ApiProperty()
   propertyName: string;
 
@@ -14,54 +23,67 @@ export class CreateListingRequestDto {
   @ApiProperty()
   roomCnt: number;
 
+  @Optional()
   @ApiProperty()
   guestNum: number;
 
+  @Optional()
   @ApiProperty()
   pricePerNight: number;
 
+  @Optional()
   @ApiProperty()
   cleaningFee: number;
 
-  @ApiProperty()
-  created: string;
-
+  @Optional()
   @ApiProperty()
   checkInTime: Date;
 
   @ApiProperty()
+  @Optional()
   checkOutTime: Date;
 
   @ApiProperty()
+  @Optional()
   isRefundable: string;
 
+  @Optional()
   @ApiProperty()
   cancellationPeriod: number;
 
+  @Optional()
   @ApiProperty()
   cancellationType: string;
 
+  @Optional()
   @ApiProperty()
   refundRate: number;
 
+  @Optional()
   @ApiProperty()
   numOfRatings: number;
 
+  @Optional()
   @ApiProperty()
   avgRatings: number;
 
+  @Optional()
   @ApiProperty()
   street: string;
 
+  @Optional()
   @ApiProperty()
   city: string;
 
-  @ApiProperty()
-  stateofResidence: string;
+  // @Optional()
+  // @ApiProperty()
+  // stateofResidence: string;
 
+  @Optional()
   @ApiProperty()
   country: string;
 
+  @Optional()
   @ApiProperty()
   taxRate: number;
 }

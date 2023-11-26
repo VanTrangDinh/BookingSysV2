@@ -1,3 +1,15 @@
+export const buildCommonKey = ({
+  type,
+  keyEntity,
+  identifierPrefix = IdentifierPrefixEnum.ID,
+  identifier,
+}: {
+  type: CacheKeyTypeEnum;
+  keyEntity: CacheKeyPrefixEnum;
+  identifierPrefix?: IdentifierPrefixEnum;
+  identifier: string;
+}): string => prefixWrapper(`${type}:${keyEntity}:${identifierPrefix}=${identifier}`);
+
 export function prefixWrapper(prefixString: string) {
   return `${prefixString}`;
 }
@@ -5,6 +17,7 @@ export function prefixWrapper(prefixString: string) {
 export enum IdentifierPrefixEnum {
   ID = 'i',
   SUBSCRIBER_ID = 's',
+  LISTING_ID = 'l',
   TEMPLATE_IDENTIFIER = 't_i',
   API_KEY = 'a_k',
   GROUPED_BLUEPRINT = 'g_b',
@@ -15,6 +28,7 @@ export enum CacheKeyPrefixEnum {
   MESSAGE_COUNT = 'message_count',
   FEED = 'feed',
   SUBSCRIBER = 'subscriber',
+  LISTING = 'listing',
   NOTIFICATION_TEMPLATE = 'notification_template',
   USER = 'user',
   INTEGRATION = 'integration',
@@ -27,4 +41,9 @@ export enum CacheKeyPrefixEnum {
 export enum CacheKeyTypeEnum {
   ENTITY = 'entity',
   QUERY = 'query',
+}
+
+export enum OrgScopePrefixEnum {
+  ENVIRONMENT_ID = 'e',
+  ORGANIZATION_ID = 'o',
 }

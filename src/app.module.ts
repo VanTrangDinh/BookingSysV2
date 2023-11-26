@@ -24,6 +24,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { KnexModule } from 'nest-knexjs';
 import ormconfig from './dal/typeorm/ormconfig';
 import { InfraModule } from './dal/infra/infra.module';
+import { ListingModule } from './app/listing/listing.module';
 
 // import { SharedModule } from './app/shared/shared.module';
 
@@ -43,13 +44,14 @@ const enterpriseImports = (): Array<Type | DynamicModule | Promise<DynamicModule
 const baseModules: Array<Type | DynamicModule | Promise<DynamicModule> | ForwardReference> = [
   SharedModule,
   AuthModule,
-  OrganizationModule,
-  EnvironmentsModule,
+  // OrganizationModule,
+  // EnvironmentsModule,
   UserModule,
   // EnvironmentConfigModule,
   TestingModule,
   HealthModule,
   // InfraModule,
+  ListingModule,
 ];
 
 const enterpriseModules = enterpriseImports();

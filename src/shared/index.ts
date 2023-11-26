@@ -3,3 +3,4 @@ export * from './entities/organization';
 export * from './entities/log';
 export * from './types';
 export * from './intergration';
+export * from './dto';

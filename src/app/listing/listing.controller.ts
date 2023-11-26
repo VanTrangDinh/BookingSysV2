@@ -8,26 +8,39 @@ import {
   Post,
   UseGuards,
   UseInterceptors,
+  Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ExternalApiAccessible } from '../auth/framework/external-api.decorator';
 import { JwtAuthGuard } from '../auth/framework/auth.guard';
 import { ListingResponseDto } from './dtos/listings-response.dto';
-import { UserSession } from '../../../dist/main';
 import { IJwtPayload } from '../../shared';
 import { CreateListingRequestDto } from './dtos/create-listing-request.dto';
 import { CreateListing } from './usecases/create-listings/create-listing.usecase';
 import { ApiResponse } from '../shared/framework/response.decorator';
-import { CreateListingCommand } from './usecases/create-listings/create-listing.command';
+import { BulkCreateListingsCommand, CreateListingCommand } from './usecases/create-listings/create-listing.command';
+import { GetListingsRequestDto } from './dtos/get-listings.request.dto';
+import { GetListings } from './usecases/get-listings/get-listings.usecase';
+import { GetListingsCommand } from './usecases/get-listings/get-listings.command';
+import { GetListing, GetListingCommand } from './usecases/get-listing';
+import { ApiOkPaginatedResponse } from '../shared/framework/paginated-ok-response.decorator';
+import { PaginatedResponseDto } from './dtos/pagination-response';
+import { GetListingsDto } from './dtos/get-listings.dto';
+import { UserSession } from '../shared/framework/user.decorator';
 
 @Controller('/listings')
 @UseInterceptors(ClassSerializerInterceptor)
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 @ApiTags('Listings')
 export class ListingsController {
-  constructor(private createListingUsecase: CreateListing) {}
+  constructor(
+    private createListingUsecase: CreateListing,
+    private getlistingsUsecae: GetListings,
+    private getListingUses: GetListing,
+  ) {}
 
   @Post('')
+  @UseGuards(JwtAuthGuard)
   @ApiResponse(ListingResponseDto, 201)
   @ApiOperation({
     summary: 'Create a new Listings',
@@ -35,7 +48,9 @@ export class ListingsController {
   @ExternalApiAccessible()
   createListing(@UserSession() user: IJwtPayload, @Body() body: CreateListingRequestDto): Promise<ListingResponseDto> {
     return this.createListingUsecase.execute(
-      CreateListingCommand.create({
+      BulkCreateListingsCommand.create({
+        // userId: user._id,
+        // roles: user.roles,
         propertyName: body.propertyName,
         zipcode: body.zipcode,
         pathroomCnt: body.pathroomCnt,
@@ -47,15 +62,54 @@ export class ListingsController {
         checkOutTime: body.checkOutTime,
         isRefundable: body.isRefundable,
         cancellationPeriod: body.cancellationPeriod,
-        cancellationType: body.cancellationType,
         refundRate: body.refundRate,
         numOfRatings: body.numOfRatings,
         avgRatings: body.avgRatings,
         street: body.street,
         city: body.city,
-        stateofResidence: body.stateofResidence,
         country: body.country,
         taxRate: body.taxRate,
+      }),
+    );
+  }
+
+  @Get('')
+  @ExternalApiAccessible()
+  @UseGuards(JwtAuthGuard)
+  @ApiOkPaginatedResponse(ListingResponseDto)
+  @ApiOperation({
+    summary: 'Get listings',
+    description: 'Returns a list of listings, could paginated using the `page` and `limit` query parameter',
+  })
+  async getListings(
+    @UserSession() user: IJwtPayload,
+    @Query() query: GetListingsDto,
+  ): Promise<PaginatedResponseDto<ListingResponseDto>> {
+    return await this.getlistingsUsecae.execute(
+      GetListingsCommand.create({
+        userId: user._id,
+        page: query.page ? Number(query.page) : 0,
+        limit: query.limit ? Number(query.limit) : 10,
+      }),
+    );
+  }
+
+  @Get('/:listingId')
+  @ExternalApiAccessible()
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse(ListingResponseDto)
+  @ApiOperation({
+    summary: 'Get listing',
+    description: 'Get listing by your internal id used to identify the listing',
+  })
+  async getListing(
+    @UserSession() user: IJwtPayload,
+    @Param('listingId') listingId: string,
+  ): Promise<ListingResponseDto> {
+    return await this.getListingUses.execute(
+      GetListingCommand.create({
+        listingId,
+        userId: user._id,
       }),
     );
   }

@@ -3,7 +3,7 @@ import { EnvironmentEntity, EnvironmentRepository, IApiKey, UserEntity, UserRepo
 
 import { JwtService } from '@nestjs/jwt';
 import { PinoLogger } from '../../logging';
-import { AuthProviderEnum, IJwtPayload } from '../../../shared';
+import { AuthProviderEnum, IJwtPayload, MemberRoleEnum, UserRoleEnum } from '../../../shared';
 import { normalizeEmail } from '../../../app/shared/helpers/email-normalization.service';
 import { CreateUser, CreateUserCommand } from '../../usecases/create-user';
 import { ApiException } from '../../../app/shared/exceptions/api.exception';
@@ -124,20 +124,40 @@ export class AuthService {
     return this.getSignedToken(user);
   }
 
-  async getSignedToken(user: UserEntity, organizationId?: string): Promise<string> {
+  async getSignedToken(user: UserEntity, organizationId?: string, environmentId?: string): Promise<string> {
     return this.jwtService.sign(
       {
         _id: user._id,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
+        profilePicture: user.profilePicture,
+        // organizationId: organizationId || null,
+        roles: user.roles,
+        // environmentId: environmentId || null,
       },
       {
         expiresIn: '30 days',
-        issuer: 'airbnb_api ',
+        issuer: 'novu_api',
       },
     );
   }
+
+  // async getSignedToken(user: UserEntity, organizationId?: string): Promise<string> {
+  //   return this.jwtService.sign(
+  //     {
+  //       _id: user._id,
+  //       firstName: user.firstName,
+  //       lastName: user.lastName,
+  //       email: user.email,
+  //       roles: user.roles || 'user',
+  //     },
+  //     {
+  //       expiresIn: '30 days',
+  //       issuer: 'airbnb_api ',
+  //     },
+  //   );
+  // }
 
   async verifyJwt(token: string) {
     try {
