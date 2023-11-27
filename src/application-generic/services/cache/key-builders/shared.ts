@@ -47,3 +47,5 @@ export enum OrgScopePrefixEnum {
   ENVIRONMENT_ID = 'e',
   ORGANIZATION_ID = 'o',
 }
+
+export const LISTING_IDENTIFIER = 'listings/get-all-listings';

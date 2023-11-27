@@ -1,4 +1,19 @@
-import { CacheKeyTypeEnum, IdentifierPrefixEnum, CacheKeyPrefixEnum, prefixWrapper, buildCommonKey } from './shared';
+import {
+  CacheKeyTypeEnum,
+  IdentifierPrefixEnum,
+  CacheKeyPrefixEnum,
+  prefixWrapper,
+  buildCommonKey,
+  LISTING_IDENTIFIER,
+} from './shared';
+
+const buildListingsKey = (): string =>
+  buildCommonKey({
+    type: CacheKeyTypeEnum.ENTITY,
+    keyEntity: CacheKeyPrefixEnum.LISTING,
+    identifierPrefix: IdentifierPrefixEnum.LISTING_ID,
+    identifier: LISTING_IDENTIFIER,
+  });
 
 const buildListingKey = ({ listingId }: { listingId: string }): string =>
   buildCommonKey({
@@ -35,4 +50,4 @@ const buildAuthServiceKey = ({ apiKey }: { apiKey: string }): string =>
     identifierPrefix: IdentifierPrefixEnum.API_KEY,
   });
 
-export { buildUserKey, buildKeyById, buildAuthServiceKey, buildListingKey };
+export { buildUserKey, buildKeyById, buildAuthServiceKey, buildListingKey, buildListingsKey };

@@ -9,13 +9,36 @@ import { EnforceEnvOrOrgIdsV2 } from '../../types';
 import { DalException } from '../../shared';
 import { IListingsDefine } from '../../../shared';
 
-type ListingQuery = FilterQuery<ListingDBModel> & EnforceEnvOrOrgIdsV2;
+type ListingQuery = FilterQuery<ListingDBModel> | EnforceEnvOrOrgIdsV2;
 
 export class ListingRepository extends BaseRepository<ListingDBModel, ListingEntity, ListingQuery> {
   private listing: SoftDeleteModel;
   constructor() {
     super(Listing, ListingEntity);
     this.listing = Listing;
+  }
+
+  async findAll(options: { limit?: number; sort?: any; skip?: number } = {}): Promise<ListingEntity[]> {
+    const data = await this._model
+      .find({
+        sort: options.sort || null,
+      })
+      .skip(options.skip as number)
+      .limit(options.limit as number)
+      .lean()
+      .exec();
+
+    return this.mapEntities(data);
+  }
+
+  async findByHostId(_hostId: string, secondaryRead = false): Promise<ListingEntity | null> {
+    return await this.findOne(
+      {
+        _hostId,
+      },
+      undefined,
+      { readPreference: secondaryRead ? 'secondaryPreferred' : 'primary' },
+    );
   }
 
   async bulkCreateListings(listings: IListingsDefine[]) {

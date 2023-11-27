@@ -3,14 +3,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsDefined, IsString } from 'class-validator';
 
 export class CreateListingRequestDto {
-  @ApiProperty({
-    description:
-      'The internal identifier you used to create this lising, usually correlates to the id the user in your systems',
-  })
-  @IsString()
-  @IsDefined()
-  listingId: string;
-
   @ApiProperty()
   propertyName: string;
 

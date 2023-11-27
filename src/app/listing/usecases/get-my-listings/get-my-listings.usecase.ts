@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { ListingEntity, ListingRepository } from '../../../../dal/repositories/listing';
-import { GetListingsCommand } from './get-listings.command';
+import { ListingRepository } from '../../../../dal/repositories/listing';
+import { GetListingsCommand } from './get-my-listings.command';
 
 @Injectable()
-export class GetListings {
+export class GetByHostListings {
   constructor(private readonly listingRepository: ListingRepository) {}
 
   async execute(command: GetListingsCommand) {
@@ -14,8 +14,6 @@ export class GetListings {
     const query = {
       _hostId: command.userId,
     };
-
-    console.log(typeof query._hostId);
 
     const totalCount = await this.listingRepository.count(query);
 

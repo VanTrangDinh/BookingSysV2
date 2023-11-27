@@ -4,7 +4,7 @@ import { GetListingCommand } from './get-listing.command';
 import { buildListingKey, CachedEntity } from '../../../../application-generic';
 
 @Injectable()
-export class GetListing {
+export class GetListingByHost {
   constructor(private readonly listingRepository: ListingRepository) {}
 
   async execute(command: GetListingCommand): Promise<ListingEntity> {

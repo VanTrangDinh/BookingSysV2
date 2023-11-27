@@ -18,15 +18,18 @@ import { IJwtPayload } from '../../shared';
 import { CreateListingRequestDto } from './dtos/create-listing-request.dto';
 import { CreateListing } from './usecases/create-listings/create-listing.usecase';
 import { ApiResponse } from '../shared/framework/response.decorator';
-import { BulkCreateListingsCommand, CreateListingCommand } from './usecases/create-listings/create-listing.command';
-import { GetListingsRequestDto } from './dtos/get-listings.request.dto';
-import { GetListings } from './usecases/get-listings/get-listings.usecase';
-import { GetListingsCommand } from './usecases/get-listings/get-listings.command';
-import { GetListing, GetListingCommand } from './usecases/get-listing';
+import { CreateListingCommand } from './usecases/create-listings/create-listing.command';
+import { GetByHostListings } from './usecases/get-my-listings/get-my-listings.usecase';
+import { GetListingsCommand } from './usecases/get-my-listings/get-my-listings.command';
+import { GetListingByHost, GetListingCommand } from './usecases/get-my-listing';
 import { ApiOkPaginatedResponse } from '../shared/framework/paginated-ok-response.decorator';
 import { PaginatedResponseDto } from './dtos/pagination-response';
 import { GetListingsDto } from './dtos/get-listings.dto';
 import { UserSession } from '../shared/framework/user.decorator';
+import { GetAllListingsCommand } from './usecases/get-all-listings/get-listings.command';
+import { GetListings } from './usecases/get-all-listings/get-listings.usecase';
+import { GetListingById } from './usecases/get-listing/get-listing-id.usecase';
+import { GetListingByIdCommand } from './usecases/get-listing/get-listing-id.command';
 
 @Controller('/listings')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -35,22 +38,31 @@ import { UserSession } from '../shared/framework/user.decorator';
 export class ListingsController {
   constructor(
     private createListingUsecase: CreateListing,
-    private getlistingsUsecae: GetListings,
-    private getListingUses: GetListing,
+    private getlistingsUsecae: GetByHostListings,
+    private getListingUses: GetListingByHost,
+    private getAllListingsUsecase: GetListings,
+    private getListingByIdUsecase: GetListingById,
   ) {}
 
   @Post('')
   @UseGuards(JwtAuthGuard)
   @ApiResponse(ListingResponseDto, 201)
   @ApiOperation({
-    summary: 'Create a new Listings',
+    summary: 'Create Listing',
+    description:
+      'Creates a new listing on the Airbnb platform. ' +
+      'The listing will represent a property or space available for booking. ' +
+      'Details such as property type, amenities, and pricing can be specified during the creation process.',
   })
   @ExternalApiAccessible()
-  createListing(@UserSession() user: IJwtPayload, @Body() body: CreateListingRequestDto): Promise<ListingResponseDto> {
+  async createListing(
+    @UserSession() user: IJwtPayload,
+    @Body() body: CreateListingRequestDto,
+  ): Promise<ListingResponseDto> {
     return this.createListingUsecase.execute(
-      BulkCreateListingsCommand.create({
-        // userId: user._id,
-        // roles: user.roles,
+      CreateListingCommand.create({
+        userId: user._id,
+        roles: user.roles,
         propertyName: body.propertyName,
         zipcode: body.zipcode,
         pathroomCnt: body.pathroomCnt,
@@ -73,12 +85,28 @@ export class ListingsController {
     );
   }
 
-  @Get('')
+  @Get('/get-all-listings')
+  @ExternalApiAccessible()
+  @ApiOkPaginatedResponse(ListingResponseDto)
+  @ApiOperation({
+    summary: 'Get listings',
+    description: 'Returns a list of listings, could paginated using the `page` and `limit` query parameter',
+  })
+  async getAllListings(@Query() query: GetListingsDto): Promise<PaginatedResponseDto<ListingResponseDto>> {
+    return await this.getAllListingsUsecase.execute(
+      GetAllListingsCommand.create({
+        page: query.page ? Number(query.page) : 0,
+        limit: query.limit ? Number(query.limit) : 10,
+      }),
+    );
+  }
+
+  @Get('/get-listings-by-host')
   @ExternalApiAccessible()
   @UseGuards(JwtAuthGuard)
   @ApiOkPaginatedResponse(ListingResponseDto)
   @ApiOperation({
-    summary: 'Get listings',
+    summary: 'Get listings by host',
     description: 'Returns a list of listings, could paginated using the `page` and `limit` query parameter',
   })
   async getListings(
@@ -94,7 +122,7 @@ export class ListingsController {
     );
   }
 
-  @Get('/:listingId')
+  @Get('/host/:listingId')
   @ExternalApiAccessible()
   @UseGuards(JwtAuthGuard)
   @ApiResponse(ListingResponseDto)
@@ -110,6 +138,21 @@ export class ListingsController {
       GetListingCommand.create({
         listingId,
         userId: user._id,
+      }),
+    );
+  }
+
+  @Get('/:listingId')
+  @ExternalApiAccessible()
+  @ApiResponse(ListingResponseDto)
+  @ApiOperation({
+    summary: 'Get listing by id',
+    description: 'Get listing by your external user used to identify the listing',
+  })
+  async getListingById(@Param('listingId') listingId: string): Promise<ListingResponseDto> {
+    return await this.getListingByIdUsecase.execute(
+      GetListingByIdCommand.create({
+        listingId,
       }),
     );
   }
