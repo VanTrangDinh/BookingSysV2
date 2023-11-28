@@ -23,14 +23,11 @@ export class GetListings {
     // };
     const data = await this.listingRepository.findAll({ limit: command.limit, skip: command.page * command.limit });
 
-    console.log({ data });
-
     // const data = await this.listingRepository.find(query, {
     // limit: command.limit,
     // skip: command.page * command.limit,
     // });
 
-    console.log({ data });
     return {
       page: command.page,
       totalCount,

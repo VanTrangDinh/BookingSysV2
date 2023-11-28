@@ -31,11 +31,11 @@ export class CreateListingCommand extends AuthenticatedCommand {
 
   @IsOptional()
   @IsDate()
-  checkInTime: Date;
+  checkInTime?: Date;
 
   @IsOptional()
   @IsDate()
-  checkOutTime: Date;
+  checkOutTime?: Date;
 
   @IsOptional()
   @IsString()

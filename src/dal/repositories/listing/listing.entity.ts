@@ -46,6 +46,10 @@ export class ListingEntity {
   country?: string;
 
   taxRate?: number;
+
+  // isDraft?: boolean;
+
+  // isPublished?: boolean;
 }
 
 export type ListingDBModel = ChangePropsValueType<ListingEntity, '_hostId'>;

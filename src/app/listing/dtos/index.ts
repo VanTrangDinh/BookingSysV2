@@ -4,3 +4,4 @@ export * from './pagination-response';
 export * from './listings-response.dto';
 export * from './get-listings.request.dto';
 export * from './get-all-listings.response.dto';
+export * from './search.dto';

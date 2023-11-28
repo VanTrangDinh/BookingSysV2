@@ -15,7 +15,7 @@ export class CreateListing {
   async execute(command: CreateListingCommand): Promise<ListingEntity | any> {
     let listings = await this.fetchLisitngs();
 
-    if (!listings) {
+    if (listings) {
       await this.invalidateCache.invalidateByKey({
         key: buildListingsKey(),
       });

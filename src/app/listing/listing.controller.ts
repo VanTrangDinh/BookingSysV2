@@ -30,6 +30,9 @@ import { GetAllListingsCommand } from './usecases/get-all-listings/get-listings.
 import { GetListings } from './usecases/get-all-listings/get-listings.usecase';
 import { GetListingById } from './usecases/get-listing/get-listing-id.usecase';
 import { GetListingByIdCommand } from './usecases/get-listing/get-listing-id.command';
+import { SearchListing } from './usecases/search-listing/search-listing.usecase';
+import { SearchCommand } from './usecases/search-listing/search-listing.commad';
+import { SearchDto } from './dtos/search.dto';
 
 @Controller('/listings')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -42,7 +45,27 @@ export class ListingsController {
     private getListingUses: GetListingByHost,
     private getAllListingsUsecase: GetListings,
     private getListingByIdUsecase: GetListingById,
+    private searchListingsUsecase: SearchListing,
   ) {}
+
+  @Get('/search')
+  @ApiResponse(ListingResponseDto, 201)
+  @ApiOperation({
+    summary: 'Search listing by key',
+  })
+  @ExternalApiAccessible()
+  async searchListing(@Body() search: SearchDto) {
+    return this.searchListingsUsecase.execute(
+      SearchCommand.create({
+        city: search?.city,
+        street: search?.street,
+        country: search?.country,
+        checkInTime: search?.checkInTime,
+        checkOutTime: search?.checkOutTime,
+        guestNum: search?.guestNum,
+      }),
+    );
+  }
 
   @Post('')
   @UseGuards(JwtAuthGuard)
