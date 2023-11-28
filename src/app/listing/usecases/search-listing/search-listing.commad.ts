@@ -20,11 +20,11 @@ export class SearchCommand extends BaseCommand {
 
   @IsDate()
   @IsOptional()
-  checkInTime?: Date | string;
+  checkInTime?: Date;
 
   @IsDate()
   @IsOptional()
-  checkOutTime?: Date | string;
+  checkOutTime?: Date;
 
   @IsNumber()
   @IsOptional()

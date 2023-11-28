@@ -54,15 +54,21 @@ export class ListingRepository extends BaseRepository<ListingDBModel, ListingEnt
     }
 
     if (checkInTime) {
-      filters.push({ checkInTime: { $lte: checkInTime } });
+      filters.push({
+        $or: [{ checkInTime: { $lte: checkInTime } }, { checkInTime: null }],
+      });
+      // filters.push({ checkInTime: { $lte: checkInTime } });
     }
 
     if (checkOutTime) {
-      filters.push({ checkOutTime: { $lte: checkOutTime } });
+      filters.push({
+        $or: [{ checkOutTime: { $gte: checkOutTime } }, { checkOutTime: null }],
+      });
+      // filters.push({ checkOutTime: { $gte: checkOutTime } });
     }
 
     if (guestNum !== undefined) {
-      filters.push({ guestNum: { $lte: guestNum } });
+      filters.push({ guestNum: { $gte: guestNum } });
     }
 
     // Combine filters using logical AND
@@ -72,91 +78,6 @@ export class ListingRepository extends BaseRepository<ListingDBModel, ListingEnt
     const results = await this.find(query);
 
     return results as ListingEntity[];
-
-    // const query: any = {
-    //   // isPublished: true, // Assuming this is a common filter for published listings
-    // };
-
-    // if (city) {
-    //   query.city = city;
-    // }
-
-    // if (street) {
-    //   query.street = street;
-    // }
-
-    // if (country) {
-    //   query.country = country;
-    // }
-
-    // if (checkInTime && checkOutTime) {
-    //   // Search for listings available between the specified check-in and check-out times
-    //   query.checkInTime = { $lte: checkInTime };
-    //   query.checkOutTime = { $gte: checkOutTime };
-    // }
-
-    // if (guestNum) {
-    //   query.guestNum = guestNum;
-    // }
-
-    // // Perform the MongoDB query with the constructed query object
-    // const results = await this.find(query);
-
-    // return results as ListingEntity[];
-
-    // const query: any = {};
-
-    // if (city || street || country) {
-    //   query.$text = {
-    //     $search: [city, street, country].filter(Boolean).join(' '),
-    //   };
-    // }
-
-    // console.log(query);
-
-    // if (checkInTime || checkOutTime) {
-    //   query.checkInTime = {};
-    //   if (checkInTime) query.checkInTime.$gte = checkInTime;
-    //   if (checkOutTime) query.checkInTime.$lt = checkOutTime;
-    // }
-
-    // if (guestNum) {
-    //   query.guestNum = guestNum;
-    // }
-
-    // try {
-    //   console.log({ query });
-
-    //   const regexSearch = new RegExp(query, 'i');
-    //   const results = await this.find(regexSearch, {
-    //     score: { $meta: 'textScore' }, // For sorting based on text search relevance
-    //   });
-
-    //   return results as ListingEntity[];
-    // } catch (error) {
-    //   console.error('Error in searchListings:', error);
-    //   throw error;
-    // }
-    // try {
-    //   const { searchKey, city, street, country, checkInTime, checkOutTime, guestNum } = searchParams;
-    //   const regexSearch = new RegExp(searchKey, 'i');
-    //   // Construct the search query based on the provided parameters
-    //   const query: any = { $text: { $search: regexSearch } };
-    //   if (city) query.city = city;
-    //   if (street) query.street = street;
-    //   if (country) query.country = country;
-    //   if (checkInTime) query.checkInTime = { $gte: checkInTime };
-    //   if (checkOutTime) query.checkOutTime = { $lte: checkOutTime };
-    //   if (guestNum) query.guestNum = guestNum;
-    //   // Use the text index for full-text search
-    //   const results = await this.find(query, { score: { $meta: 'textScore' } });
-    //   return results as ListingEntity[];
-    // } catch (error) {}
-    // const regexSearch = new RegExp(keySearch, 'i'); // 'i' for case-insensitive
-    // const results = await this.find({
-    //   propertyName: { $regex: regexSearch },
-    // });
-    // return results as ListingEntity[];
   }
 
   async findAll(options: { limit?: number; sort?: any; skip?: number } = {}): Promise<ListingEntity[]> {

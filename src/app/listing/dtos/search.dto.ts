@@ -1,15 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsOptional } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsDate, IsDateString, IsOptional, MinDate } from 'class-validator';
 
 export class SearchDto {
-  // @ApiProperty()
-  // @IsOptional()
-  // search: string;
-
-  // @ApiProperty()
-  // @IsOptional()
-  // searchKey: string;
-
   @ApiProperty()
   @IsOptional()
   city?: string;
@@ -23,12 +16,20 @@ export class SearchDto {
   country?: string;
 
   @ApiProperty()
+  // @IsOptional()
+  // @IsDateString()
   @IsOptional()
-  checkInTime: Date | string;
+  @Transform(({ value }) => value && new Date(value))
+  @IsDate()
+  @MinDate(new Date())
+  checkInTime: Date;
 
   @ApiProperty()
   @IsOptional()
-  checkOutTime: Date | string;
+  @Transform(({ value }) => value && new Date(value))
+  @IsDate()
+  @MinDate(new Date())
+  checkOutTime: Date;
 
   @ApiProperty()
   @IsOptional()

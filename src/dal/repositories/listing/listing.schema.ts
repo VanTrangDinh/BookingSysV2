@@ -45,13 +45,13 @@ const lisingSchema = new Schema<ListingDBModel>(
 
     checkInTime: {
       type: Schema.Types.Date,
-      required: false,
+      default: null,
       index: true,
     },
 
     checkOutTime: {
       type: Schema.Types.Date,
-      required: false,
+      default: null,
       index: true,
     },
 

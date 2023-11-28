@@ -10,7 +10,7 @@ import {
   UseInterceptors,
   Query,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ExternalApiAccessible } from '../auth/framework/external-api.decorator';
 import { JwtAuthGuard } from '../auth/framework/auth.guard';
 import { ListingResponseDto } from './dtos/listings-response.dto';
@@ -51,7 +51,7 @@ export class ListingsController {
   @Get('/search')
   @ApiResponse(ListingResponseDto, 201)
   @ApiOperation({
-    summary: 'Search listing by key',
+    summary: 'Search listing by many keys',
   })
   @ExternalApiAccessible()
   async searchListing(@Body() search: SearchDto) {
@@ -127,6 +127,18 @@ export class ListingsController {
   @Get('/get-listings-by-host')
   @ExternalApiAccessible()
   @UseGuards(JwtAuthGuard)
+  @ApiQuery({
+    name: 'page',
+    type: Number,
+    description: 'Number of page for the pagination',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'pageSize',
+    type: Number,
+    description: 'Size of page for the pagination',
+    required: false,
+  })
   @ApiOkPaginatedResponse(ListingResponseDto)
   @ApiOperation({
     summary: 'Get listings by host',
