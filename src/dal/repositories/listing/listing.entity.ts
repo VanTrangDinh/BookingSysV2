@@ -1,7 +1,7 @@
 import { ChangePropsValueType } from '../../types';
 
 export class ListingEntity {
-  _id: string;
+  _id?: string;
 
   _hostId?: string;
 
@@ -46,6 +46,8 @@ export class ListingEntity {
   country?: string;
 
   taxRate?: number;
+
+  isAvailable?: boolean;
 
   // isDraft?: boolean;
 

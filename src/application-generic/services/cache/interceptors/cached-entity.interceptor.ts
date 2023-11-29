@@ -1,6 +1,7 @@
 import { Inject, Logger } from '@nestjs/common';
 
 import { CacheService, CachingConfig } from '../cache.service';
+// import { CacheService } from '../CacheService';
 
 const LOG_CONTEXT = 'CachedEntityInterceptor';
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -16,8 +17,6 @@ export function CachedEntity({ builder, options }: { builder: (...args) => strin
       if (!this.cacheService?.cacheEnabled()) {
         return await originalMethod.apply(this, args);
       }
-
-      console.log(`Calling original method: ${methodName}`);
 
       const cacheService = this.cacheService as CacheService;
 
@@ -36,8 +35,6 @@ export function CachedEntity({ builder, options }: { builder: (...args) => strin
 
       try {
         const value = await cacheService.get(cacheKey);
-
-        console.log({ value });
 
         if (value) {
           return JSON.parse(value);

@@ -6,28 +6,31 @@ import { Transform } from 'class-transformer';
 export class CreateListingCommand extends AuthenticatedCommand {
   @IsDefined()
   @IsString()
-  propertyName: string;
+  @IsOptional()
+  propertyName?: string;
 
   @IsDefined()
   @IsOptional()
-  zipcode: number;
+  zipcode?: number;
 
   @IsOptional()
-  pathroomCnt: number;
+  @IsNumber()
+  pathroomCnt?: number;
 
   @IsOptional()
-  roomCnt: number;
+  roomCnt?: number;
 
   @IsOptional()
-  guestNum: number;
+  @IsNumber()
+  guestNum?: number;
 
   @IsNumber()
   @IsOptional()
-  pricePerNight: number;
+  pricePerNight?: number;
 
   @IsNumber()
   @IsOptional()
-  cleaningFee: number;
+  cleaningFee?: number;
 
   @IsOptional()
   @IsDate()
@@ -39,31 +42,32 @@ export class CreateListingCommand extends AuthenticatedCommand {
 
   @IsOptional()
   @IsString()
-  isRefundable: string;
+  isRefundable?: string;
 
   @IsNumber()
   @IsOptional()
-  cancellationPeriod: number;
+  cancellationPeriod?: number;
 
   // cancellationType: string;
 
   @IsNumber()
   @IsOptional()
-  refundRate: number;
+  refundRate?: number;
+
+  @IsOptional()
+  @IsNumber()
+  numOfRatings?: number;
 
   @IsNumber()
   @IsOptional()
-  numOfRatings: number;
-
-  @IsNumber()
-  // @IsOptional()
-  avgRatings: number;
+  avgRatings?: number;
 
   @IsOptional()
-  street: string;
+  street?: string;
 
   @IsOptional()
-  city: string;
+  @IsString()
+  city?: string;
 
   // @IsOptional()
   // @IsString()
@@ -71,11 +75,11 @@ export class CreateListingCommand extends AuthenticatedCommand {
 
   @IsOptional()
   @IsString()
-  country: string;
+  country?: string;
 
   @IsNumber()
   @IsOptional()
-  taxRate: number;
+  taxRate?: number;
 }
 
 // import { IsArray, ValidateNested } from 'class-validator';

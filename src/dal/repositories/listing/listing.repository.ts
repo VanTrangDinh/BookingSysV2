@@ -103,6 +103,19 @@ export class ListingRepository extends BaseRepository<ListingDBModel, ListingEnt
     );
   }
 
+  async findByListingId(_hostId: string, _id: string): Promise<ListingEntity> {
+    const data = await this.MongooseModel.find({
+      _hostId: _hostId,
+      _id: _id,
+    });
+    console.log({ _hostId: _hostId, _id: _id });
+
+    console.log({ data });
+    // if (!data) return null;
+
+    return data as ListingEntity;
+  }
+
   async bulkCreateListings(listings: IListingsDefine[]) {
     const bulkWriteOps = listings.map((listing) => {
       const { listingId, ...rest } = listing;

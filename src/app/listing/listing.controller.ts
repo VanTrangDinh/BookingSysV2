@@ -9,8 +9,9 @@ import {
   UseGuards,
   UseInterceptors,
   Query,
+  Patch,
 } from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ExternalApiAccessible } from '../auth/framework/external-api.decorator';
 import { JwtAuthGuard } from '../auth/framework/auth.guard';
 import { ListingResponseDto } from './dtos/listings-response.dto';
@@ -33,6 +34,13 @@ import { GetListingByIdCommand } from './usecases/get-listing/get-listing-id.com
 import { SearchListing } from './usecases/search-listing/search-listing.usecase';
 import { SearchCommand } from './usecases/search-listing/search-listing.commad';
 import { SearchDto } from './dtos/search.dto';
+import { UpdateListingAvailable } from './usecases/update-listings-available/update-listing-available.usecase';
+import { UpdateListingAvailableCommand } from './usecases/update-listings-available';
+import { RemoveListingResponseDto, UpdateListingAvailableRequestDto } from './dtos';
+import { UpdateLsitngResponseDto } from './dtos/update-lisiting-response.dto';
+import { UpdateListingRequestDto } from './dtos/update-listing-request.dto';
+import { UpdateListing, UpdateListingCommand } from './usecases/update-listing';
+import { RemoveListing, RemoveListingCommand } from './usecases/remove-listing';
 
 @Controller('/listings')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -46,7 +54,78 @@ export class ListingsController {
     private getAllListingsUsecase: GetListings,
     private getListingByIdUsecase: GetListingById,
     private searchListingsUsecase: SearchListing,
+    private updateListingAvailableUsecase: UpdateListingAvailable,
+    private updateListing: UpdateListing,
+    private removeListing: RemoveListing,
   ) {}
+
+  @Delete('/:listingId')
+  @ExternalApiAccessible()
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse(RemoveListingResponseDto)
+  @ApiOperation({
+    summary: 'Delete listing',
+    description: 'Deletes a listing entity from the Airbnb platform',
+  })
+  async removeSubscriber(
+    @UserSession() user: IJwtPayload,
+    @Param('listingId') listingId: string,
+  ): Promise<RemoveListingResponseDto> {
+    return await this.removeListing.execute(
+      RemoveListingCommand.create({
+        listingId,
+        userId: user._id,
+      }),
+    );
+  }
+
+  @Patch('/:listingId/updateListing')
+  @ExternalApiAccessible()
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse(UpdateLsitngResponseDto)
+  @ApiOperation({
+    summary: 'Update subscriber global preferences',
+  })
+  async updateSubscriberGlobalPreferences(
+    @UserSession() user: IJwtPayload,
+    @Param('listingId') listingId: string,
+    @Body() body: UpdateListingRequestDto,
+  ) {
+    const commandData: any = { listingId, userId: user._id };
+
+    Object.keys(body).forEach((key) => {
+      if (body[key] !== undefined) {
+        commandData[key] = body[key];
+      }
+    });
+
+    const command = UpdateListingCommand.create(commandData);
+    return await this.updateListing.execute(command);
+  }
+
+  @Patch('/:listingId/isAvailable')
+  @ExternalApiAccessible()
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse(ListingResponseDto)
+  @ApiOperation({
+    summary: 'Update listing available status',
+    description: 'Used to update the listing isAvailable flag.',
+  })
+  async updateListingAvailability(
+    @UserSession() user: IJwtPayload,
+    @Param('listingId') listingId: string,
+    @Body() body: UpdateListingAvailableRequestDto,
+  ): Promise<ListingResponseDto> {
+    return await this.updateListingAvailableUsecase.execute(
+      UpdateListingAvailableCommand.create({
+        userId: user._id,
+        isAvailable: body.isAvailable,
+        listingId,
+      }),
+    );
+  }
 
   @Get('/search')
   @ApiResponse(ListingResponseDto, 201)
@@ -68,6 +147,7 @@ export class ListingsController {
   }
 
   @Post('')
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @ApiResponse(ListingResponseDto, 201)
   @ApiOperation({
@@ -126,6 +206,7 @@ export class ListingsController {
 
   @Get('/get-listings-by-host')
   @ExternalApiAccessible()
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @ApiQuery({
     name: 'page',
@@ -159,6 +240,7 @@ export class ListingsController {
 
   @Get('/host/:listingId')
   @ExternalApiAccessible()
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @ApiResponse(ListingResponseDto)
   @ApiOperation({

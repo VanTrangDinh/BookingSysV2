@@ -94,6 +94,11 @@ const lisingSchema = new Schema<ListingDBModel>(
 
     taxRate: Schema.Types.Number,
 
+    isAvailable: {
+      type: Schema.Types.Boolean,
+      default: false,
+    },
+
     // isDraft: { type: Schema.Types.Boolean, default: true, index: true, select: false }, // select: khi document.find or findOne se loai cai nay ra neu false
     // isPublished: { type: Schema.Types.Boolean, default: false, index: true, select: false },
   },

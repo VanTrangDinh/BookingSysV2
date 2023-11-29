@@ -5,3 +5,7 @@ export * from './listings-response.dto';
 export * from './get-listings.request.dto';
 export * from './get-all-listings.response.dto';
 export * from './search.dto';
+export * from './update-listing-available-request.dto';
+export * from './update-listing-request.dto';
+export * from './update-lisiting-response.dto';
+export * from './remove-listing-response.dto';

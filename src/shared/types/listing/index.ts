@@ -34,6 +34,7 @@ export interface IListingDBModel {
   stateofResidence?: string;
   country?: string;
   taxRate?: number;
+  isAvailable?: boolean;
 }
 
 export interface IListingsDefine extends IListingDBModel {

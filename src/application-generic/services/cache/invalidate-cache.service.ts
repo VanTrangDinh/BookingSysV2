@@ -1,6 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { CacheService } from './cache.service';
-
 const LOG_CONTEXT = 'InvalidateCache';
 
 /**
