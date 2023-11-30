@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   Query,
   Patch,
+  Req,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ExternalApiAccessible } from '../auth/framework/external-api.decorator';
@@ -20,7 +21,7 @@ import { CreateListingRequestDto } from './dtos/create-listing-request.dto';
 import { CreateListing } from './usecases/create-listings/create-listing.usecase';
 import { ApiResponse } from '../shared/framework/response.decorator';
 import { CreateListingCommand } from './usecases/create-listings/create-listing.command';
-import { GetByHostListings } from './usecases/get-my-listings/get-my-listings.usecase';
+import { GetListingsByHost } from './usecases/get-my-listings/get-my-listings.usecase';
 import { GetListingsCommand } from './usecases/get-my-listings/get-my-listings.command';
 import { GetListingByHost, GetListingCommand } from './usecases/get-my-listing';
 import { ApiOkPaginatedResponse } from '../shared/framework/paginated-ok-response.decorator';
@@ -41,6 +42,8 @@ import { UpdateLsitngResponseDto } from './dtos/update-lisiting-response.dto';
 import { UpdateListingRequestDto } from './dtos/update-listing-request.dto';
 import { UpdateListing, UpdateListingCommand } from './usecases/update-listing';
 import { RemoveListing, RemoveListingCommand } from './usecases/remove-listing';
+import { RolesGuard } from '../auth/framework/roles.guard';
+import { Roles } from '../auth/framework/roles.decorator';
 
 @Controller('/listings')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -49,7 +52,7 @@ import { RemoveListing, RemoveListingCommand } from './usecases/remove-listing';
 export class ListingsController {
   constructor(
     private createListingUsecase: CreateListing,
-    private getlistingsUsecae: GetByHostListings,
+    private getlistingsUsecae: GetListingsByHost,
     private getListingUses: GetListingByHost,
     private getAllListingsUsecase: GetListings,
     private getListingByIdUsecase: GetListingById,
@@ -58,6 +61,30 @@ export class ListingsController {
     private updateListing: UpdateListing,
     private removeListing: RemoveListing,
   ) {}
+
+  @Get('/host/:listingId')
+  // @ExternalApiAccessible()
+  @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @Roles('host')
+  // @UseGuards(JwtAuthGuard)
+  @ApiResponse(ListingResponseDto)
+  @ApiOperation({
+    summary: 'Get listing',
+    description: 'Get listing by your internal id used to identify the listing',
+  })
+  async getListing(
+    @Req() user: IJwtPayload,
+    // @UserSession() user: IJwtPayload,
+    @Param('listingId') listingId: string,
+  ): Promise<ListingResponseDto> {
+    return await this.getListingUses.execute(
+      GetListingCommand.create({
+        listingId,
+        userId: user._id,
+      }),
+    );
+  }
 
   @Delete('/:listingId')
   @ExternalApiAccessible()
@@ -127,25 +154,6 @@ export class ListingsController {
     );
   }
 
-  @Get('/search')
-  @ApiResponse(ListingResponseDto, 201)
-  @ApiOperation({
-    summary: 'Search listing by many keys',
-  })
-  @ExternalApiAccessible()
-  async searchListing(@Body() search: SearchDto) {
-    return this.searchListingsUsecase.execute(
-      SearchCommand.create({
-        city: search?.city,
-        street: search?.street,
-        country: search?.country,
-        checkInTime: search?.checkInTime,
-        checkOutTime: search?.checkOutTime,
-        guestNum: search?.guestNum,
-      }),
-    );
-  }
-
   @Post('')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
@@ -184,6 +192,25 @@ export class ListingsController {
         city: body.city,
         country: body.country,
         taxRate: body.taxRate,
+      }),
+    );
+  }
+
+  @Get('/search')
+  @ApiResponse(ListingResponseDto, 201)
+  @ApiOperation({
+    summary: 'Search listing by many keys',
+  })
+  @ExternalApiAccessible()
+  async searchListing(@Body() search: SearchDto) {
+    return this.searchListingsUsecase.execute(
+      SearchCommand.create({
+        city: search?.city,
+        street: search?.street,
+        country: search?.country,
+        checkInTime: search?.checkInTime,
+        checkOutTime: search?.checkOutTime,
+        guestNum: search?.guestNum,
       }),
     );
   }
@@ -234,27 +261,6 @@ export class ListingsController {
         userId: user._id,
         page: query.page ? Number(query.page) : 0,
         limit: query.limit ? Number(query.limit) : 10,
-      }),
-    );
-  }
-
-  @Get('/host/:listingId')
-  @ExternalApiAccessible()
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
-  @ApiResponse(ListingResponseDto)
-  @ApiOperation({
-    summary: 'Get listing',
-    description: 'Get listing by your internal id used to identify the listing',
-  })
-  async getListing(
-    @UserSession() user: IJwtPayload,
-    @Param('listingId') listingId: string,
-  ): Promise<ListingResponseDto> {
-    return await this.getListingUses.execute(
-      GetListingCommand.create({
-        listingId,
-        userId: user._id,
       }),
     );
   }

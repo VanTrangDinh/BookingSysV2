@@ -139,7 +139,8 @@ lisingSchema.index({
 });
 
 lisingSchema.plugin(mongooseDelete, { deletedAt: true, deletedBy: true, overrideMethods: 'all' });
-
+//
+// subscriberSchema.plugin(mongooseDelete, { deletedAt: true, deletedBy: true, overrideMethods: 'all' });
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Listing =
   (mongoose.models.Listing as mongoose.Model<ListingDBModel>) ||

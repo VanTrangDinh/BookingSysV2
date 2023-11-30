@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InvalidateCacheService, buildListingKey } from '../../../../application-generic';
+import { InvalidateCacheService, buildListingKey, buildListingsKey } from '../../../../application-generic';
 import { ListingRepository } from '../../../../dal/repositories/listing';
 import { RemoveListingCommand } from './remove-listing.command';
 import { ApiException } from '../../../shared/exceptions/api.exception';
@@ -16,17 +16,17 @@ export class RemoveListing {
     try {
       const listing = await this.listingRepository.findOne(
         { _id: command.listingId, _hostId: command.userId },
-        // { isAvailable: false },
+        { isAvailable: false },
       );
 
       if (!listing) {
         throw new NotFoundException(`Listing with id ${command.listingId} not found`);
       }
 
-      if (!listing.isAvailable)
-        throw new ApiException(
-          `A listing already available, please change isAvailable to false for ${command.listingId}`,
-        );
+      // if (listing?.isAvailable === true) {
+      //   throw new ApiException(
+      //     `A listing already available, please change isAvailable to false for ${command.listingId}`,
+      //   );
 
       //invalidate query
 
@@ -36,14 +36,17 @@ export class RemoveListing {
       //     _environmentId: command.environmentId,
       //   }),
       // });
-
       await this.invalidateCache.invalidateByKey({
-        key: buildListingKey({
-          listingId: command.listingId,
-        }),
+        key: buildListingsKey(),
       });
 
-      await this.listingRepository.delete({ _id: command.listingId });
+      // await this.invalidateCache.invalidateByKey({
+      //   key: buildListingKey({
+      //     listingId: command.listingId,
+      //   }),
+      // });
+
+      await this.listingRepository.delete({ _id: command.listingId, _hostId: command.userId });
     } catch (error) {
       if (error instanceof DalException) {
         throw new ApiException(error.message);

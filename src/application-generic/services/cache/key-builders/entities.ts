@@ -4,7 +4,8 @@ import {
   CacheKeyPrefixEnum,
   prefixWrapper,
   buildCommonKey,
-  LISTING_IDENTIFIER,
+  LISTING_IDENTIFIER_USER,
+  LISTING_IDENTIFIER_HOST,
 } from './shared';
 
 const buildListingsKey = (): string =>
@@ -12,7 +13,15 @@ const buildListingsKey = (): string =>
     type: CacheKeyTypeEnum.ENTITY,
     keyEntity: CacheKeyPrefixEnum.LISTING,
     identifierPrefix: IdentifierPrefixEnum.LISTING_ID,
-    identifier: LISTING_IDENTIFIER,
+    identifier: LISTING_IDENTIFIER_USER,
+  });
+
+const buildListingsKeyByHost = (): string =>
+  buildCommonKey({
+    type: CacheKeyTypeEnum.ENTITY,
+    keyEntity: CacheKeyPrefixEnum.LISTING,
+    identifierPrefix: IdentifierPrefixEnum.LISTING_ID,
+    identifier: LISTING_IDENTIFIER_HOST,
   });
 
 const buildListingKey = ({ listingId }: { listingId: string }): string =>
@@ -50,4 +59,4 @@ const buildAuthServiceKey = ({ apiKey }: { apiKey: string }): string =>
     identifierPrefix: IdentifierPrefixEnum.API_KEY,
   });
 
-export { buildUserKey, buildKeyById, buildAuthServiceKey, buildListingKey, buildListingsKey };
+export { buildUserKey, buildKeyById, buildAuthServiceKey, buildListingKey, buildListingsKey, buildListingsKeyByHost };

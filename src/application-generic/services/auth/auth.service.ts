@@ -125,6 +125,8 @@ export class AuthService {
   }
 
   async getSignedToken(user: UserEntity, organizationId?: string, environmentId?: string): Promise<string> {
+    // Convert the UserRoleEnum to an array
+    // const rolesArray = [user.roles];
     return this.jwtService.sign(
       {
         _id: user._id,

@@ -9,7 +9,7 @@ import { JwtAuthGuard } from '../auth/framework/auth.guard';
 @Module({
   imports: [SharedModule, AuthModule],
   controllers: [ListingsController],
-  providers: [...USE_CASES, RolesGuard, JwtAuthGuard],
-  exports: [...USE_CASES, RolesGuard, JwtAuthGuard],
+  providers: [...USE_CASES],
+  exports: [...USE_CASES],
 })
 export class ListingModule {}

@@ -5,20 +5,53 @@ import { BaseRepository } from '../base-repository';
 
 import { ListingDBModel, ListingEntity } from './listing.entity';
 import { Listing } from './listing.schema';
-import { EnforceEnvOrOrgIdsV2 } from '../../types';
+// import { EnforceEnvOrOrgIdsV2 } from '../../types';
 import { DalException } from '../../shared';
 import { IListingsDefine } from '../../../shared';
 import { SearchDto } from '../../../app/listing/dtos';
 import { SearchCommand } from '../../../app/listing/usecases/search-listing/search-listing.commad';
 
-type ListingQuery = FilterQuery<ListingDBModel> | EnforceEnvOrOrgIdsV2;
+// type ListingQuery = FilterQuery<ListingDBModel> & EnforceEnvOrOrgIdsV2;
+export type ListingQuery = FilterQuery<ListingDBModel>;
 
-export class ListingRepository extends BaseRepository<ListingDBModel, ListingEntity, ListingQuery> {
+export class ListingRepository extends BaseRepository<ListingDBModel, ListingEntity, object> {
   private listing: SoftDeleteModel;
 
   constructor() {
     super(Listing, ListingEntity);
     this.listing = Listing;
+  }
+
+  async delete(query: ListingQuery) {
+    const foundListing = await this.findOne(
+      {
+        _hostId: query._hostId,
+        _id: query._id,
+      },
+      { isAvailable: false },
+    );
+
+    if (!foundListing) {
+      throw new DalException(`Could not find subscriber ${query._id} to delete`);
+    }
+
+    const requestQuery: ListingQuery = {
+      _hostId: query._hostId,
+      _id: query._id,
+    };
+
+    return await this.listing.delete(requestQuery);
+  }
+
+  async findDeleted(query: ListingQuery) {
+    const requestQuery: ListingQuery = {
+      _hostId: query._hostId,
+      _id: query._id,
+    };
+
+    const res = await this.listing.findDeleted(requestQuery);
+
+    return this.mapEntity(res);
   }
 
   async searchListings(searchParams: SearchCommand): Promise<ListingEntity[]> {
@@ -75,7 +108,7 @@ export class ListingRepository extends BaseRepository<ListingDBModel, ListingEnt
     const query = filters.length > 0 ? { $and: filters } : {};
 
     // Execute the search query
-    const results = await this.find(query);
+    const results = await this.find(query as ListingQuery);
 
     return results as ListingEntity[];
   }
@@ -103,15 +136,25 @@ export class ListingRepository extends BaseRepository<ListingDBModel, ListingEnt
     );
   }
 
-  async findByListingId(_hostId: string, _id: string): Promise<ListingEntity> {
-    const data = await this.MongooseModel.find({
-      _hostId: _hostId,
-      _id: _id,
-    });
-    console.log({ _hostId: _hostId, _id: _id });
+  // async findByListingId(_hostId: string, _id: string): Promise<ListingEntity> {
+  //   const data = await this.MongooseModel.find({
+  //     _hostId: _hostId,
+  //     _id: _id,
+  //   });
 
-    console.log({ data });
-    // if (!data) return null;
+  //   // if (!data) return null;
+
+  //   return data as ListingEntity;
+  // }
+
+  async findByListingId(listingId: string, secondaryRead = false): Promise<ListingEntity | null> {
+    const data = await this.findOne(
+      {
+        _id: listingId,
+      },
+      undefined,
+      { readPreference: secondaryRead ? 'secondaryPreferred' : 'primary' },
+    );
 
     return data as ListingEntity;
   }
@@ -175,11 +218,8 @@ export class ListingRepository extends BaseRepository<ListingDBModel, ListingEnt
     };
   }
 
-  async findById(id: string, select?: string): Promise<ListingEntity | null> {
-    const data = await this.MongooseModel.findById(id, select);
-    if (!data) return null;
-
-    return this.mapEntity(data.toObject());
+  async findById(listingId?: string, _hostId?: string) {
+    return await this.findOne({ listingId, _hostId });
   }
 }
 

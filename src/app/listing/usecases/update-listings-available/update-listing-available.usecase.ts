@@ -17,7 +17,7 @@ export class UpdateListingAvailable {
   }
 
   async execute(command: UpdateListingAvailableCommand) {
-    const listing = await this.listingRepository.findByListingId(command.listingId, command.userId);
+    const listing = await this.listingRepository.findByListingId(command.listingId);
 
     if (!listing) throw new NotFoundException('Listing not found!');
 

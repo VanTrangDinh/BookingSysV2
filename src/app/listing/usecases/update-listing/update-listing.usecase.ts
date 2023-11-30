@@ -12,7 +12,7 @@ export class UpdateListing {
   ) {}
 
   async execute(command: UpdateListingCommand): Promise<ListingEntity> {
-    const existingListing = await this.listingRepository.findByListingId(command.userId, command.listingId);
+    const existingListing = await this.listingRepository.findByListingId(command.listingId);
 
     if (!existingListing) {
       throw new NotFoundException(`ListingId: ${command.listingId}  not found`);
@@ -44,6 +44,6 @@ export class UpdateListing {
 
     await this.listingRepository.update(query, updateBody);
 
-    return await this.listingRepository.findByListingId(command.userId, command.listingId);
+    return (await this.listingRepository.findByListingId(command.listingId)) as ListingEntity;
   }
 }

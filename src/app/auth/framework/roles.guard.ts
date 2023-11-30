@@ -10,7 +10,7 @@ export class RolesGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const roles = this.reflector.get<string[]>('roles', context.getHandler());
     if (!roles) {
-      return true;
+      return true; // Nếu không có đánh dấu roles, cho phép truy cập
     }
 
     const request = context.switchToHttp().getRequest();
@@ -25,6 +25,20 @@ export class RolesGuard implements CanActivate {
       const user = jwt.decode(token) as IJwtPayload;
       if (!user) return false;
     }
+
+    // if (!authorizationHeader?.includes('ApiKey')) {
+    //   const user = jwt.decode(token) as IJwtPayload;
+
+    //   const userRoles = user.roles as string[];
+
+    //   if (!userRoles || !roles.some((role) => userRoles.includes(role))) {
+    //     return false;
+    //   }
+
+    //   // if (!user || !user.roles || !user.roles.some((role) => roles.includes(role))) {
+    //   //   return false;
+    //   // }
+    // }
 
     return true;
   }
