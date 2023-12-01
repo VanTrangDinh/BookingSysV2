@@ -1,5 +1,13 @@
 import { Module } from '@nestjs/common';
-import { UserRepository, DalService, OrganizationRepository, EnvironmentRepository, LogRepository } from '../../dal';
+import {
+  UserRepository,
+  DalService,
+  OrganizationRepository,
+  EnvironmentRepository,
+  LogRepository,
+  AvailableBookingSlotRepository,
+  BookingRepository,
+} from '../../dal';
 
 import * as packageJson from '../../../package.json';
 import { createNestLoggingModuleOptions, LoggerModule } from '../../application-generic/logging';
@@ -20,6 +28,8 @@ const DAL_MODELS = [
   LogRepository,
   HostRepository,
   ListingRepository,
+  AvailableBookingSlotRepository,
+  BookingRepository,
 ];
 
 const dalService = {

@@ -15,16 +15,22 @@ export class UserRepository extends BaseRepository<UserDBModel, UserEntity, obje
   }
 
   async findByEmail(email: string): Promise<UserEntity | null> {
-    /**
-     * check cache for existing user entity
-     * if not found , get from database and set value in cache
-     * return user
-     */
-
     return this.findOne({
       email,
     });
   }
+
+  // async findByEmail(email: string): Promise<UserEntity | null> {
+  //   /**
+  //    * check cache for existing user entity
+  //    * if not found , get from database and set value in cache
+  //    * return user
+  //    */
+
+  //   return this.findOne({
+  //     email,
+  //   });
+  // }
 
   async findById(id: string, select?: string): Promise<UserEntity | null> {
     const data = await this.MongooseModel.findById(id, select);

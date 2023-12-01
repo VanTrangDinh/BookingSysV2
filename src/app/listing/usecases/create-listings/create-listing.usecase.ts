@@ -20,7 +20,7 @@ export class CreateListing {
         key: buildListingsKey(),
       });
 
-      if (!command.roles?.includes('host')) throw new UnauthorizedException('User not allowed to create listing');
+      // if (!command.roles?.includes('host')) throw new UnauthorizedException('User not allowed to create listing');
       const listingExist = await this.listingRepository.findOne({
         propertyName: command.propertyName,
         _hostId: command.userId,

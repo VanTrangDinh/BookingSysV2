@@ -25,6 +25,7 @@ import { KnexModule } from 'nest-knexjs';
 import ormconfig from './dal/typeorm/ormconfig';
 import { InfraModule } from './dal/infra/infra.module';
 import { ListingModule } from './app/listing/listing.module';
+import { BookingModule } from './app/booking/booking.module';
 
 // import { SharedModule } from './app/shared/shared.module';
 
@@ -52,6 +53,7 @@ const baseModules: Array<Type | DynamicModule | Promise<DynamicModule> | Forward
   HealthModule,
   // InfraModule,
   ListingModule,
+  BookingModule,
 ];
 
 const enterpriseModules = enterpriseImports();

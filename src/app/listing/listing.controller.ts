@@ -16,7 +16,7 @@ import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger'
 import { ExternalApiAccessible } from '../auth/framework/external-api.decorator';
 import { JwtAuthGuard } from '../auth/framework/auth.guard';
 import { ListingResponseDto } from './dtos/listings-response.dto';
-import { IJwtPayload } from '../../shared';
+import { IJwtPayload, UserRoleEnum } from '../../shared';
 import { CreateListingRequestDto } from './dtos/create-listing-request.dto';
 import { CreateListing } from './usecases/create-listings/create-listing.usecase';
 import { ApiResponse } from '../shared/framework/response.decorator';
@@ -63,19 +63,18 @@ export class ListingsController {
   ) {}
 
   @Get('/host/:listingId')
-  // @ExternalApiAccessible()
-  @ApiBearerAuth()
+  @ExternalApiAccessible()
   @UseGuards(RolesGuard)
-  @Roles('host')
-  // @UseGuards(JwtAuthGuard)
+  @Roles(UserRoleEnum.HOST)
+  @ApiBearerAuth()
   @ApiResponse(ListingResponseDto)
   @ApiOperation({
     summary: 'Get listing',
     description: 'Get listing by your internal id used to identify the listing',
   })
   async getListing(
-    @Req() user: IJwtPayload,
-    // @UserSession() user: IJwtPayload,
+    // @Req() req: IJwtPayload,
+    @UserSession() user: IJwtPayload,
     @Param('listingId') listingId: string,
   ): Promise<ListingResponseDto> {
     return await this.getListingUses.execute(
@@ -88,7 +87,9 @@ export class ListingsController {
 
   @Delete('/:listingId')
   @ExternalApiAccessible()
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @Roles(UserRoleEnum.HOST)
   @ApiResponse(RemoveListingResponseDto)
   @ApiOperation({
     summary: 'Delete listing',
@@ -109,7 +110,9 @@ export class ListingsController {
   @Patch('/:listingId/updateListing')
   @ExternalApiAccessible()
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @Roles(UserRoleEnum.HOST)
   @ApiResponse(UpdateLsitngResponseDto)
   @ApiOperation({
     summary: 'Update subscriber global preferences',
@@ -134,7 +137,9 @@ export class ListingsController {
   @Patch('/:listingId/isAvailable')
   @ExternalApiAccessible()
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @Roles(UserRoleEnum.HOST)
   @ApiResponse(ListingResponseDto)
   @ApiOperation({
     summary: 'Update listing available status',
@@ -156,7 +161,9 @@ export class ListingsController {
 
   @Post('')
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @Roles(UserRoleEnum.HOST)
   @ApiResponse(ListingResponseDto, 201)
   @ApiOperation({
     summary: 'Create Listing',
@@ -173,7 +180,6 @@ export class ListingsController {
     return this.createListingUsecase.execute(
       CreateListingCommand.create({
         userId: user._id,
-        roles: user.roles,
         propertyName: body.propertyName,
         zipcode: body.zipcode,
         pathroomCnt: body.pathroomCnt,
@@ -197,11 +203,11 @@ export class ListingsController {
   }
 
   @Get('/search')
+  @ExternalApiAccessible()
   @ApiResponse(ListingResponseDto, 201)
   @ApiOperation({
     summary: 'Search listing by many keys',
   })
-  @ExternalApiAccessible()
   async searchListing(@Body() search: SearchDto) {
     return this.searchListingsUsecase.execute(
       SearchCommand.create({
@@ -234,7 +240,9 @@ export class ListingsController {
   @Get('/get-listings-by-host')
   @ExternalApiAccessible()
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @Roles(UserRoleEnum.ADMIN)
   @ApiQuery({
     name: 'page',
     type: Number,
