@@ -16,4 +16,6 @@ export class BookingRepository extends BaseRepository<BookingDBModel, BookingEnt
 
     return existingBookings.length === 0;
   }
+
+  async isValidPromoCode(promoCode: string) {}
 }

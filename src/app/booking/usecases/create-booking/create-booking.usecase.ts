@@ -20,7 +20,7 @@ export class CreateBooking {
     }
 
     if (command.promoCode) {
-      const isValidPromoCode = await this.bookingRepository.isValidPromoCode(bookingData.promoCode);
+      const isValidPromoCode = await this.bookingRepository.isValidPromoCode(command.promoCode);
 
       if (!isValidPromoCode) {
         // Xử lý khi mã giảm giá không hợp lệ
