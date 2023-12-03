@@ -11,8 +11,20 @@ import {
   Query,
   Patch,
   Req,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiForbiddenResponse,
+  ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+  ApiUnprocessableEntityResponse,
+} from '@nestjs/swagger';
 import { ExternalApiAccessible } from '../auth/framework/external-api.decorator';
 import { JwtAuthGuard } from '../auth/framework/auth.guard';
 import { ListingResponseDto } from './dtos/listings-response.dto';
@@ -44,6 +56,7 @@ import { UpdateListing, UpdateListingCommand } from './usecases/update-listing';
 import { RemoveListing, RemoveListingCommand } from './usecases/remove-listing';
 import { RolesGuard } from '../auth/framework/roles.guard';
 import { Roles } from '../auth/framework/roles.decorator';
+import { BAD_REQUEST, INTERNAL_SERVER_ERROR, NO_ENTITY_FOUND, UNAUTHORIZED_REQUEST } from '../shared/constants';
 
 @Controller('/listings')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -203,12 +216,18 @@ export class ListingsController {
   }
 
   @Get('/search')
+  @HttpCode(HttpStatus.OK)
+  @ApiConsumes('application/json')
+  @ApiNotFoundResponse({ description: NO_ENTITY_FOUND })
+  @ApiForbiddenResponse({ description: UNAUTHORIZED_REQUEST })
+  @ApiUnprocessableEntityResponse({ description: BAD_REQUEST })
+  @ApiInternalServerErrorResponse({ description: INTERNAL_SERVER_ERROR })
   @ExternalApiAccessible()
   @ApiResponse(ListingResponseDto, 201)
   @ApiOperation({
     summary: 'Search listing by many keys',
   })
-  async searchListing(@Body() search: SearchDto) {
+  async searchListing(@Query() search: SearchDto) {
     return this.searchListingsUsecase.execute(
       SearchCommand.create({
         city: search?.city,

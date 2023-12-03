@@ -18,14 +18,5 @@ export class CreateBooking {
       // Xử lý khi chỗ ở không khả dụng
       // throw new Error('Chỗ ở không khả dụng trong khoảng thời gian này.');
     }
-
-    if (command.promoCode) {
-      const isValidPromoCode = await this.bookingRepository.isValidPromoCode(command.promoCode);
-
-      if (!isValidPromoCode) {
-        // Xử lý khi mã giảm giá không hợp lệ
-        throw new Error('Mã giảm giá không hợp lệ.');
-      }
-    }
   }
 }

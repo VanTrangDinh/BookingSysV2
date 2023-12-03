@@ -23,4 +23,5 @@ export interface IJwtPayload {
   environmentId: string;
   roles: string[];
   exp: number;
+  // permissions?: string;
 }

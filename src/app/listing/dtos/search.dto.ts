@@ -22,14 +22,14 @@ export class SearchDto {
   @Transform(({ value }) => value && new Date(value))
   @IsDate()
   @MinDate(new Date())
-  checkInTime: Date;
+  checkInTime?: Date;
 
   @ApiProperty()
   @IsOptional()
   @Transform(({ value }) => value && new Date(value))
   @IsDate()
   @MinDate(new Date())
-  checkOutTime: Date;
+  checkOutTime?: Date;
 
   @ApiProperty()
   @IsOptional()
