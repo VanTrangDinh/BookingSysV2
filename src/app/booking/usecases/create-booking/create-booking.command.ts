@@ -31,22 +31,12 @@ export class CreateBookingCommand extends AuthenticatedCommand {
   cleaningFee?: number;
 
   @IsOptional()
-  @IsDate()
-  checkInTime?: Date;
-
-  @IsOptional()
-  @IsDate()
-  checkOutTime?: Date;
-
-  @IsOptional()
   @IsString()
   isRefundable?: string;
 
   @IsNumber()
   @IsOptional()
   childrenGuestNum?: number;
-
-  // cancellationType: string;
 
   @IsNumber()
   @IsOptional()
@@ -79,12 +69,12 @@ export class CreateBookingCommand extends AuthenticatedCommand {
   @IsNumber()
   tax?: number;
 
-  @IsNumber()
-  totalPriceTax: number;
+  // @IsNumber()
+  // totalPriceTax: number;
 
-  @IsNumber()
-  amountDue: number;
+  // @IsNumber()
+  // amountDue: number;
 
-  @IsNumber()
-  refundAmount: number;
+  // @IsNumber()
+  // refundAmount: number;
 }
