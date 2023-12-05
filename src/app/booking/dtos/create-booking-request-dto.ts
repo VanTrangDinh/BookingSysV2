@@ -17,20 +17,10 @@ export class CreateBookingRequestDto {
   amountPaid?: number;
 
   @ApiProperty()
-  bookingDate?: Date;
-
-  @ApiProperty()
-  modifiedDate?: Date;
-
-  @ApiProperty()
   adultsGuestNum?: number;
 
   @ApiProperty()
   cleaningFee?: number;
-
-  @ApiProperty()
-  @Optional()
-  isRefundable?: string;
 
   @ApiProperty()
   @Optional()

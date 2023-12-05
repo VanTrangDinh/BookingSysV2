@@ -10,7 +10,12 @@ export enum UserRoleEnum {
   ADMIN = 'admin',
 }
 
-
+export enum BookingStatus {
+  PENDING = 'Pending',
+  CONFIRMED = 'Confirmed',
+  CANCELLED = 'Cancelled',
+  COMPLETED = 'Completed',
+}
 
 // export declare enum UserRoles {
 //   "system-admin" = "system-admin",

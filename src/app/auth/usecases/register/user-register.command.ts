@@ -24,6 +24,6 @@ export class UserRegisterCommand extends BaseCommand {
   @IsOptional()
   organizationName?: string;
 
-  @IsDefined()
+  @IsOptional()
   roles?: UserRoleEnum;
 }

@@ -2,6 +2,7 @@ import * as mongoose from 'mongoose';
 import { Schema } from 'mongoose';
 import { BookingDBModel } from './booking.entity';
 import { schemaOptions } from '../schema-default.options';
+import { BookingStatus } from '../../../shared';
 
 const bookingSchema = new Schema<BookingDBModel>(
   {
@@ -20,10 +21,22 @@ const bookingSchema = new Schema<BookingDBModel>(
     amountPaid: Schema.Types.Number,
     bookingDate: Schema.Types.Date,
     modifiedDate: Schema.Types.Date,
-    adultsGuestNum: Schema.Types.Number,
-    childrenGuestNum: Schema.Types.Number,
-    infantsGuestNum: Schema.Types.Number,
-    petsNum: Schema.Types.Number,
+    adultsGuestNum: {
+      type: Schema.Types.Number,
+      default: 0,
+    },
+    childrenGuestNum: {
+      type: Schema.Types.Number,
+      default: 0,
+    },
+    infantsGuestNum: {
+      type: Schema.Types.Number,
+      default: 0,
+    },
+    petsNum: {
+      type: Schema.Types.Number,
+      default: 0,
+    },
     isCancelled: Schema.Types.Boolean,
     refundPaid: Schema.Types.Number,
     cancelDate: Schema.Types.Date,
@@ -33,6 +46,11 @@ const bookingSchema = new Schema<BookingDBModel>(
     totalPriceTax: Schema.Types.Number,
     amountDue: Schema.Types.Number,
     refundAmount: Schema.Types.Number,
+    status: {
+      type: Schema.Types.String,
+      enum: BookingStatus,
+      default: BookingStatus.PENDING, // Giá trị mặc định là "Pending"
+    },
   },
   schemaOptions,
 );

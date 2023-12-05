@@ -6,6 +6,8 @@ export class BookingRepository extends BaseRepository<BookingDBModel, BookingEnt
   constructor() {
     super(Booking, BookingEntity);
   }
+
+  //check if checkIndate, checkOutDate, occupancy
   async isListingAvailable(listingId: string, checkInDate: Date, checkOutDate: Date): Promise<boolean> {
     // Kiểm tra xem có bất kỳ đặt phòng nào khác nằm trong khoảng thời gian yêu cầu không
     const existingBookings = await this.find({
@@ -16,6 +18,4 @@ export class BookingRepository extends BaseRepository<BookingDBModel, BookingEnt
 
     return existingBookings.length === 0;
   }
-
-  // async isValidPromoCode(promoCode: string) {}
 }

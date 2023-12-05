@@ -17,9 +17,10 @@ export class CreateBookingCommand extends AuthenticatedCommand {
   amountPaid?: number;
 
   @IsDate()
-  bookingDate?: Date;
+  bookingDate: Date;
 
   @IsDate()
+  @IsOptional()
   modifiedDate?: Date;
 
   @IsNumber()
@@ -30,9 +31,9 @@ export class CreateBookingCommand extends AuthenticatedCommand {
   @IsOptional()
   cleaningFee?: number;
 
-  @IsOptional()
-  @IsString()
-  isRefundable?: string;
+  // @IsOptional()
+  // @IsString()
+  // isRefundable?: string;
 
   @IsNumber()
   @IsOptional()

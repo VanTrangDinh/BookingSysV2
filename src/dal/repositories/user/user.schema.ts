@@ -19,6 +19,7 @@ const userSchema = new Schema<UserDBModel>(
     roles: {
       type: Schema.Types.String,
       enum: UserRoleEnum,
+      default: UserRoleEnum.USER,
     },
     profilePicture: Schema.Types.String,
     resetToken: Schema.Types.String,

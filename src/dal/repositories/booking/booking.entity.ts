@@ -1,3 +1,4 @@
+import { BookingStatus } from '../../../shared';
 import { ChangePropsValueType } from '../../types';
 
 export class BookingEntity {
@@ -22,6 +23,7 @@ export class BookingEntity {
   totalPriceTax: number;
   amountDue: number;
   refundAmount: number;
+  status: BookingStatus
 }
 
 export type BookingDBModel = ChangePropsValueType<BookingEntity, '_userId', 'listingId'>;

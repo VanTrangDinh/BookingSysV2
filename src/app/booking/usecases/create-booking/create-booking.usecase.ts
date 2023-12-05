@@ -13,11 +13,16 @@ export class CreateBooking {
       command.checkOutDate,
     );
 
+    //check listing is available
     if (!isListingAvailable) {
       throw new BadRequestException('Accommodation is not available during this period.');
       // Xử lý khi chỗ ở không khả dụng
       // throw new Error('Chỗ ở không khả dụng trong khoảng thời gian này.');
     }
+
+    //check promoCode 
+
+    // 
 
     return this.bookingRepository.create(command);
   }
