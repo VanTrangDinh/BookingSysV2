@@ -36,17 +36,10 @@ export class BookingController {
         userId: user._id,
         checkInDate: new Date(body.checkInDate),
         checkOutDate: new Date(body.checkOutDate),
-        bookingDate: new Date(),
         adultsGuestNum: body.adultsGuestNum,
         infantsGuestNum: body.infantsGuestNum,
         petsNum: body.petsNum,
-        cleaningFee: body.cleaningFee,
-        amountPaid: body.amountPaid,
-        refundPaid: body.refundPaid,
-        isCancelled: body.isCancelled,
         promoCode: body.promoCode,
-        tax: body.tax,
-        cancelDate: body.cancelDate,
       }),
     );
   }

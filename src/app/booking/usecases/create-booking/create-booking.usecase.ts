@@ -1,28 +1,69 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateBookingCommand } from './create-booking.command';
-import { BookingEntity, BookingRepository } from '../../../../dal';
+import { AvailableBookingSlotRepository, BookingEntity, BookingRepository, ListingRepository } from '../../../../dal';
 
 @Injectable()
 export class CreateBooking {
-  constructor(private bookingRepository: BookingRepository) {}
+  constructor(
+    private availableBookingSlotRepository: AvailableBookingSlotRepository,
+    private bookingRepository: BookingRepository,
+    private listingRepository: ListingRepository,
+  ) {}
 
   async execute(command: CreateBookingCommand): Promise<BookingEntity> {
-    const isListingAvailable = await this.bookingRepository.isListingAvailable(
-      command._listingId,
-      command.checkInDate,
-      command.checkOutDate,
-    );
+    /* 
+    
+    The user's selected period:
+    --------[---------]-------
+    Booking no1 
+    [-----]-------------------
+    Booking no2
+    --------------------[----]
+    Booking no3
+    -----[----]---------------
+    Booking no4
+    -----------[---]----------
+    Booking no5
+    ------[-------]-----------
+    Booking no6
+    --------------[--------]--
+    Booking no7
+    -----[----------------]---
+    
+    */
 
-    //check listing is available
-    if (!isListingAvailable) {
-      throw new BadRequestException('Accommodation is not available during this period.');
-      // Xử lý khi chỗ ở không khả dụng
-      // throw new Error('Chỗ ở không khả dụng trong khoảng thời gian này.');
+    if (command.checkInDate >= command.checkOutDate) {
+      throw new BadRequestException(`Check in date  must be greater than or equal to check out date`);
     }
+    const listingExists = await this.listingRepository.findOne({ _id: command._listingId });
 
-    //check promoCode 
+    if (!listingExists) throw new BadRequestException(`Listing ${command._listingId} does not exist`);
 
-    // 
+    const existingSlot = await this.availableBookingSlotRepository.find({ _listingId: command._listingId });
+
+    if (existingSlot) {
+      const isListingAvailable = await this.availableBookingSlotRepository.bookingConflict({
+        _listingId: command._listingId,
+        checkInDate: command.checkInDate,
+        checkOutDate: command.checkOutDate,
+      });
+
+      if (isListingAvailable > 0) {
+        throw new BadRequestException('Accommodation is not available during this period.');
+      } else {
+        await this.availableBookingSlotRepository.create({
+          _listingId: command._listingId,
+          startDate: command.checkInDate,
+          endDate: command.checkOutDate,
+        });
+      }
+    } else {
+      await this.availableBookingSlotRepository.create({
+        _listingId: command._listingId,
+        startDate: command.checkInDate,
+        endDate: command.checkOutDate,
+      });
+    }
 
     return this.bookingRepository.create(command);
   }

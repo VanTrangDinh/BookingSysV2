@@ -2,6 +2,7 @@ import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/co
 import { ListingEntity, ListingRepository } from '../../../../dal/repositories/listing';
 import { CreateListingCommand } from './create-listing.command';
 import { CachedEntity, InvalidateCacheService, buildListingsKey } from '../../../../application-generic';
+import { AvailableBookingSlotRepository } from '../../../../dal';
 
 const WEEK_IN_SECONDS = 60 * 60 * 24 * 7;
 
@@ -10,6 +11,7 @@ export class CreateListing {
   constructor(
     private invalidateCache: InvalidateCacheService,
     private listingRepository: ListingRepository,
+    private availableBookingSlotRepository: AvailableBookingSlotRepository,
   ) {}
 
   async execute(command: CreateListingCommand): Promise<ListingEntity | any> {

@@ -13,14 +13,7 @@ export class CreateBookingRequestDto {
   checkOutDate: Date;
 
   @ApiProperty()
-  @IsOptional()
-  amountPaid?: number;
-
-  @ApiProperty()
   adultsGuestNum?: number;
-
-  @ApiProperty()
-  cleaningFee?: number;
 
   @ApiProperty()
   @Optional()
@@ -33,34 +26,6 @@ export class CreateBookingRequestDto {
   petsNum?: number;
 
   @ApiProperty()
-  isCancelled?: boolean;
-
-  @ApiProperty()
-  @Optional()
-  refundPaid?: number;
-
-  @ApiProperty()
-  @Optional()
-  cancelDate?: Date;
-
-  @ApiProperty()
   @Optional()
   promoCode?: string;
-
-  // @ApiProperty()
-  // @Optional()
-  // totalPrice?: number;
-
-  @ApiProperty()
-  @Optional()
-  tax?: number;
-
-  // @ApiProperty()
-  // totalPriceTax: number;
-
-  // @ApiProperty()
-  // amountDue: number;
-
-  // @ApiProperty()
-  // refundAmount: number;
 }

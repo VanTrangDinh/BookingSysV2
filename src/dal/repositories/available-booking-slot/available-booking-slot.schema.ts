@@ -20,7 +20,8 @@ const availableBookingSlotSchema = new Schema<AvailableBookingSlotDBModel>(
 
 availableBookingSlotSchema.index({
   _listingId: 1,
-  _id: 1,
+  startDate: 1,
+  endDate: 1,
 });
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

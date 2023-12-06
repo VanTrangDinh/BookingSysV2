@@ -12,28 +12,9 @@ export class CreateBookingCommand extends AuthenticatedCommand {
   @IsDate()
   checkOutDate: Date;
 
-  @IsOptional()
-  @IsNumber()
-  amountPaid?: number;
-
-  @IsDate()
-  bookingDate: Date;
-
-  @IsDate()
-  @IsOptional()
-  modifiedDate?: Date;
-
   @IsNumber()
   @IsOptional()
   adultsGuestNum?: number;
-
-  @IsNumber()
-  @IsOptional()
-  cleaningFee?: number;
-
-  // @IsOptional()
-  // @IsString()
-  // isRefundable?: string;
 
   @IsNumber()
   @IsOptional()
@@ -47,28 +28,47 @@ export class CreateBookingCommand extends AuthenticatedCommand {
   @IsNumber()
   petsNum?: number;
 
-  @IsBoolean()
-  @IsOptional()
-  isCancelled?: boolean;
-
-  @IsOptional()
-  @IsNumber()
-  refundPaid?: number;
-
-  @IsOptional()
-  @IsDate()
-  cancelDate?: Date;
-
   @IsOptional()
   @IsString()
   promoCode?: string;
 
-  @IsNumber()
-  @IsOptional()
-  totalPrice?: number;
+  // @IsDate()
+  // bookingDate: Date;
 
-  @IsNumber()
-  tax?: number;
+  // @IsDate()
+  // @IsOptional()
+  // modifiedDate?: Date;
+
+  // @IsNumber()
+  // @IsOptional()
+  // cleaningFee?: number;
+
+  // @IsOptional()
+  // @IsString()
+  // isRefundable?: string;
+
+  // @IsOptional()
+  // @IsNumber()
+  // amountPaid?: number;
+
+  // @IsBoolean()
+  // @IsOptional()
+  // isCancelled?: boolean;
+
+  // @IsOptional()
+  // @IsNumber()
+  // refundPaid?: number;
+
+  // @IsOptional()
+  // @IsDate()
+  // cancelDate?: Date;
+
+  // @IsNumber()
+  // @IsOptional()
+  // totalPrice?: number;
+
+  // @IsNumber()
+  // tax?: number;
 
   // @IsNumber()
   // totalPriceTax: number;
