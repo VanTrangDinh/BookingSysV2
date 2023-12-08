@@ -15,7 +15,7 @@ export class ListingEntity {
 
   guestNum?: number;
 
-  pricePerNight?: number;
+  pricePerNight: number;
 
   cleaningFee?: number;
 
@@ -45,7 +45,7 @@ export class ListingEntity {
 
   country?: string;
 
-  taxRate?: number;
+  taxRate: number;
 
   isAvailable?: boolean;
 

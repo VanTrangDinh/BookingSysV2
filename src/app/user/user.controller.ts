@@ -22,7 +22,7 @@ import { UpdateProfileEmail } from './usecases/update-profile-email/update-profi
 import { UpdateProfileEmailCommand } from './usecases/update-profile-email/update-profile-email.command';
 
 @Controller('/users')
-@ApiTags('Users')
+@ApiTags('User')
 @UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(JwtAuthGuard)
 // @ApiExcludeController()

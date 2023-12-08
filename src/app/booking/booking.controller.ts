@@ -21,6 +21,7 @@ export class BookingController {
   @UseGuards(RolesGuard)
   @Roles(UserRoleEnum.USER)
   @ApiResponse(BookingResponseDto, 201)
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Create Booking',
     description: 'Creates a new booking on the Airbnb platform.',

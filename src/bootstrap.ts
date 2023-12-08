@@ -72,11 +72,13 @@ export async function bootstrap(expressApp?): Promise<INestApplication> {
   app.use(compression());
 
   const options = new DocumentBuilder()
-    .setTitle('AirBnB API')
-    .setDescription('Open API Specification for AirBnB API')
+    .setTitle('Booking System API')
+    .setDescription('Open API Specification for Booking System API')
     .setVersion('1.0')
     .addTag('Auth')
     .addTag('User')
+    .addTag('Listings')
+    .addTag('Booking')
     .addBearerAuth({
       type: 'http',
       scheme: 'bearer',
