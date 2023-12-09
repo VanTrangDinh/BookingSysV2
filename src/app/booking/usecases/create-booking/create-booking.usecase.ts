@@ -7,7 +7,6 @@ import {
   ListingEntity,
   ListingRepository,
 } from '../../../../dal';
-import { getNumberOfDays } from '../../../shared/helpers/get-number-of-date-helper';
 
 @Injectable()
 export class CreateBooking {
@@ -115,13 +114,6 @@ export class CreateBooking {
     return totalBasePrice + totalTax;
   }
 }
-
-// interface GuestNumbers {
-//   adultsGuestNum?: number | any;
-//   childrenGuestNum?: number | any;
-//   infantsGuestNum?: number | any;
-//   petsNum?: number | any;
-// }
 
 // @Injectable()
 // export class CreateBooking {

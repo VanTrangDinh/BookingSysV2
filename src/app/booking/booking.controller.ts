@@ -1,4 +1,13 @@
-import { Body, ClassSerializerInterceptor, Controller, Post, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  ClassSerializerInterceptor,
+  Controller,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BookingResponseDto } from './dtos/booking-response.dto';
 import { ExternalApiAccessible, UserSession } from '../../application-generic';
@@ -9,13 +18,18 @@ import { CreateBooking } from './usecases/create-booking/create-booking.usecase'
 import { CreateBookingCommand } from './usecases/create-booking/create-booking.command';
 import { Roles } from '../auth/framework/roles.decorator';
 import { RolesGuard } from '../auth/framework/roles.guard';
+import { GetBookingDetails } from './usecases/get-booking-details/get-booking-details.usecase';
+import { GetBookingDetailsCommand } from './usecases/get-booking-details/get-booking-details.command';
 
 @Controller('/booking')
 @UseInterceptors(ClassSerializerInterceptor)
 // @UseGuards(JwtAuthGuard)
 @ApiTags('Booking')
 export class BookingController {
-  constructor(private createBookingUsecase: CreateBooking) {}
+  constructor(
+    private createBookingUsecase: CreateBooking,
+    private getBookingDetailsUsecase: GetBookingDetails,
+  ) {}
 
   @Post('')
   @UseGuards(RolesGuard)
@@ -43,6 +57,22 @@ export class BookingController {
         promoCode: body.promoCode,
       }),
     );
+  }
+
+  @Get('/bookingId')
+  @UseGuards(RolesGuard)
+  @Roles(UserRoleEnum.USER)
+  @ApiResponse(BookingResponseDto, 201)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'get booking details',
+  })
+  @ExternalApiAccessible()
+  async getBookingDetails(
+    @UserSession() user: IJwtPayload,
+    @Param('bookingId') bookingId: string,
+  ): Promise<BookingResponseDto | null> {
+    return this.getBookingDetailsUsecase.execute(GetBookingDetailsCommand.create({ bookingId, userId: user._id }));
   }
 }
 

@@ -50,7 +50,7 @@
     "joi": "^17.11.0",
     "jsonwebtoken": "^9.0.2",
     "knex": "^3.0.1",
-    "mongoose": "^8.0.0",
+    "mongoose": "^8.0.3",
     "mongoose-delete": "^1.0.1",
     "nanoid": "^5.0.3",
     "nest-raven": "^10.0.0",
