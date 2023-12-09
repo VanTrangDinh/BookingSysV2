@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BookingResponseDto } from './dtos/booking-response.dto';
-import { ExternalApiAccessible, UserSession } from '../../application-generic';
+import { ExternalApiAccessible, JwtAuthGuard, UserSession } from '../../application-generic';
 import { IJwtPayload, UserRoleEnum } from '../../shared';
 import { CreateBookingRequestDto } from './dtos';
 import { ApiResponse } from '../shared/framework/response.decorator';
@@ -59,10 +59,11 @@ export class BookingController {
     );
   }
 
-  @Get('/bookingId')
-  @UseGuards(RolesGuard)
-  @Roles(UserRoleEnum.USER)
-  @ApiResponse(BookingResponseDto, 201)
+  @Get('/:bookingId')
+  @UseGuards(JwtAuthGuard)
+  // @UseGuards(RolesGuard)
+  // @Roles(UserRoleEnum.USER)
+  @ApiResponse(BookingResponseDto, 200)
   @ApiBearerAuth()
   @ApiOperation({
     summary: 'get booking details',

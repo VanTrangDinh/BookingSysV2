@@ -20,18 +20,15 @@ export class CreateBooking {
     this.validateDates(command);
     const listing = await this.getListing(command._listingId);
 
-    console.log({ listing });
     await this.checkAndCreateBookingSlot(command);
 
     const numberOfGuests = this.calculateTotalGuests(command);
 
-    console.log({ numberOfGuests });
     const numberOfDays = this.calculateNumberOfDays(command.checkInDate, command.checkOutDate);
-
-    console.log({ numberOfDays });
 
     const bookingCommand: BookingEntity = {
       ...command,
+      _userId: command.userId,
       bookingDate: new Date(),
       totalPrice: this.calculatePriceWithoutTax(listing.pricePerNight, numberOfDays, numberOfGuests),
       totalPriceTax: this.calculatePrice(listing.pricePerNight, listing.taxRate, numberOfDays, numberOfGuests),
