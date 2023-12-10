@@ -6,6 +6,7 @@ import {
   buildCommonKey,
   LISTING_IDENTIFIER_USER,
   LISTING_IDENTIFIER_HOST,
+  BOOKING_IDENTIFIER,
 } from './shared';
 
 const buildListingsKey = (): string =>
@@ -14,6 +15,14 @@ const buildListingsKey = (): string =>
     keyEntity: CacheKeyPrefixEnum.LISTING,
     identifierPrefix: IdentifierPrefixEnum.LISTING_ID,
     identifier: LISTING_IDENTIFIER_USER,
+  });
+
+const buildBookingsKey = (): string =>
+  buildCommonKey({
+    type: CacheKeyTypeEnum.ENTITY,
+    keyEntity: CacheKeyPrefixEnum.BOOKING,
+    identifierPrefix: IdentifierPrefixEnum.BOOKING_ID,
+    identifier: BOOKING_IDENTIFIER,
   });
 
 const buildListingsKeyByHost = (): string =>
@@ -59,4 +68,12 @@ const buildAuthServiceKey = ({ apiKey }: { apiKey: string }): string =>
     identifierPrefix: IdentifierPrefixEnum.API_KEY,
   });
 
-export { buildUserKey, buildKeyById, buildAuthServiceKey, buildListingKey, buildListingsKey, buildListingsKeyByHost };
+export {
+  buildUserKey,
+  buildKeyById,
+  buildAuthServiceKey,
+  buildListingKey,
+  buildListingsKey,
+  buildListingsKeyByHost,
+  buildBookingsKey,
+};

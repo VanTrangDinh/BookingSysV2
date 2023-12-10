@@ -21,7 +21,6 @@ import { IdempotencyInterceptor } from './app/shared/framework/idempotency.inter
 import { TestingModule } from './app/testing/testing.module';
 import { HealthModule } from './app/health/health.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { KnexModule } from 'nest-knexjs';
 import ormconfig from './dal/typeorm/ormconfig';
 import { InfraModule } from './dal/infra/infra.module';
 import { ListingModule } from './app/listing/listing.module';

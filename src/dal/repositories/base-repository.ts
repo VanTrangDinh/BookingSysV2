@@ -260,6 +260,25 @@ export class BaseRepository<T_DBModel, T_MappedEntity, T_Enforcement> {
     return await this.MongooseModel.deleteMany(query);
   }
 
+  async findWithPopulate(
+    query: FilterQuery<T_DBModel> & T_Enforcement,
+    select: ProjectionType<T_MappedEntity> = '',
+    options: { limit?: number; sort?: any; skip?: number } = {},
+    populateOptions: { path: string; select?: string; model?: string }[] = [],
+  ): Promise<T_MappedEntity[]> {
+    const queryBuilder = this.MongooseModel.find(query, select, {
+      sort: options.sort || null,
+    })
+      .skip(options.skip as number)
+      .limit(options.limit as number)
+      .populate(populateOptions) // Sử dụng populate để thêm các điều kiện populate
+      .lean(); // Dùng lean để trả về dữ liệu dạng plain JavaScript object
+
+    const result = (await queryBuilder.exec()) as T_MappedEntity[]; // Chuyển kiểu trả về của exec()
+
+    return this.mapEntities(result);
+  }
+
   async find(
     query: FilterQuery<T_DBModel> & T_Enforcement,
     select: ProjectionType<T_MappedEntity> = '',

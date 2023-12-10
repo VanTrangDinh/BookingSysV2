@@ -33,7 +33,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "strictNullChecks": true,
-    "target": "es6",
+    "target": "es2015",
     "esModuleInterop": false,
     "sourceMap": true,
     "skipLibCheck": true,

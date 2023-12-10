@@ -25,11 +25,14 @@ export class RolesGuard implements CanActivate {
     const authorizationHeader = request.headers.authorization;
     if (!authorizationHeader?.includes('ApiKey')) {
       const user = jwt.decode(token) as IJwtPayload;
+
       if (!user) return false;
     }
 
     if (!authorizationHeader?.includes('ApiKey')) {
       const user = jwt.decode(token) as IJwtPayload;
+
+      console.log({ user });
 
       const userRoles = user.roles as string[];
 

@@ -18,6 +18,7 @@ export enum IdentifierPrefixEnum {
   ID = 'i',
   SUBSCRIBER_ID = 's',
   LISTING_ID = 'l',
+  BOOKING_ID = 'b',
   TEMPLATE_IDENTIFIER = 't_i',
   API_KEY = 'a_k',
   GROUPED_BLUEPRINT = 'g_b',
@@ -29,6 +30,7 @@ export enum CacheKeyPrefixEnum {
   FEED = 'feed',
   SUBSCRIBER = 'subscriber',
   LISTING = 'listing',
+  BOOKING = 'booking',
   NOTIFICATION_TEMPLATE = 'notification_template',
   USER = 'user',
   INTEGRATION = 'integration',
@@ -50,3 +52,4 @@ export enum OrgScopePrefixEnum {
 
 export const LISTING_IDENTIFIER_USER = 'listings/get-all-listings';
 export const LISTING_IDENTIFIER_HOST = 'listings/get-listings-by-host';
+export const BOOKING_IDENTIFIER = 'bookings/get-bookings';

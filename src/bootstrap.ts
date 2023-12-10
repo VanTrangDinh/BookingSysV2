@@ -95,7 +95,7 @@ export async function bootstrap(expressApp?): Promise<INestApplication> {
   if (expressApp) {
     await app.init();
   } else {
-    await app.listen(process.env.PORT);
+    await app.listen(process.env.PORT || 3000);
   }
 
   // Starts listening for shutdown hooks
