@@ -26,4 +26,4 @@ export class BookingEntity {
   status?: BookingStatus;
 }
 
-export type BookingDBModel = ChangePropsValueType<BookingEntity, '_userId', 'listingId'>;
+export type BookingDBModel = ChangePropsValueType<BookingEntity, '_userId', '_listingId'>;

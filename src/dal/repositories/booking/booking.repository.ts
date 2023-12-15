@@ -1,10 +1,13 @@
+import { FilterQuery } from 'mongoose';
 import { BaseRepository } from '../base-repository';
 import { BookingDBModel, BookingEntity } from './booking.entity';
 import { Booking } from './booking.schema';
 
-// type ListingQuery = FilterQuery<BookingDBModel>;
+type BookingQuery = FilterQuery<BookingDBModel>;
 
-export class BookingRepository extends BaseRepository<BookingDBModel, BookingEntity, object> {
+// type SubscriberQuery = FilterQuery<SubscriberDBModel> & EnforceEnvOrOrgIds;
+
+export class BookingRepository extends BaseRepository<BookingDBModel, BookingEntity, BookingQuery> {
   constructor() {
     super(Booking, BookingEntity);
   }
@@ -19,5 +22,56 @@ export class BookingRepository extends BaseRepository<BookingDBModel, BookingEnt
     });
 
     return existingBookings.length === 0;
+  }
+
+  async filterBooking(
+    query: FilterQuery<BookingDBModel>,
+    pagination: { limit: number; skip: number },
+  ): Promise<BookingEntity[]> {
+    const parsedQuery = { ...query };
+    if (query._id) {
+      parsedQuery._id = this.convertStringToObjectId(query._id);
+    }
+
+    parsedQuery._listingId = this.convertStringToObjectId(query._listingId);
+
+    const data = await this.aggregate([
+      {
+        $match: parsedQuery,
+      },
+      {
+        $skip: pagination.skip,
+      },
+      {
+        $limit: pagination.limit,
+      },
+    ]);
+
+    return data;
+  }
+
+  async getBookingsByHost(listingId: string) {
+    const requestQuery: BookingQuery = {
+      _listingId: listingId,
+    };
+
+    const members = await this.MongooseModel.find(requestQuery).populate(
+      '_userId',
+      'firstName lastName email _id profilePicture createdAt',
+    );
+    if (!members) return [];
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const membersEntity: any = this.mapEntities(members);
+
+    return [
+      ...membersEntity.map((member) => {
+        return {
+          ...member,
+          _userId: member._userId ? member._userId._id : null,
+          user: member._userId,
+        };
+      }),
+    ];
   }
 }

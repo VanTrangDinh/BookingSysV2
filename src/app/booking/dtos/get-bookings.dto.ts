@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { PaginationRequestDto } from '../../shared/dtos/pagination-request';
 
 const LIMIT = {
@@ -5,4 +6,7 @@ const LIMIT = {
   MAX: 100,
 };
 
-export class GetBookingsDto extends PaginationRequestDto(LIMIT.DEFAULT, LIMIT.MAX) {}
+export class GetBookingsDto extends PaginationRequestDto(LIMIT.DEFAULT, LIMIT.MAX) {
+  @ApiProperty()
+  _listingId: string;
+}

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ListingRepository } from '../../../../dal/repositories/listing';
 import { GetListingsCommand } from './get-my-listings.command';
 import { CachedEntity, buildListingsKeyByHost } from '../../../../application-generic';
@@ -19,6 +19,8 @@ export class GetListingsByHost {
     };
 
     const totalCount = await this.listingRepository.count(query);
+
+    if (totalCount === 0) throw new NotFoundException('Dont have any listing');
 
     const data = await this.listingRepository.find(query, '', {
       limit: command.limit,

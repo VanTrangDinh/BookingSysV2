@@ -12,4 +12,7 @@ export class GetBookingsCommand extends BaseCommand {
 
   @IsString()
   hostId: string;
+
+  @IsString()
+  listingId: string;
 }

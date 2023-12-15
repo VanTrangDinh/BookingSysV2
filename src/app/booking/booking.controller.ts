@@ -117,8 +117,15 @@ export class BookingController {
     @UserSession() user: IJwtPayload,
     @Query() query: GetBookingsDto,
   ): Promise<PaginatedResponseDto<BookingResponseDto>> {
+    console.log({
+      listingId: query._listingId,
+      hostId: user._id,
+      page: query.page,
+      limit: query.limit,
+    });
     return this.getBookingsUsecase.execute(
       GetBookingsCommand.create({
+        listingId: query._listingId,
         hostId: user._id,
         page: query.page,
         limit: query.limit,
