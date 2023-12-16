@@ -7,12 +7,12 @@ import { BookingStatus } from '../../../shared';
 const bookingSchema = new Schema<BookingDBModel>(
   {
     _userId: {
-      type: Schema.Types.String,
+      type: Schema.Types.ObjectId,
       ref: 'user',
       index: true,
     },
     _listingId: {
-      type: Schema.Types.String,
+      type: Schema.Types.ObjectId,
       ref: 'listing',
       index: true,
     },

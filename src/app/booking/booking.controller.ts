@@ -105,7 +105,7 @@ export class BookingController {
   @ApiResponse(BookingResponseDto, 200)
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'get booking details',
+    summary: 'get all bookings of listing',
   })
   @ExternalApiAccessible()
   @ApiOkPaginatedResponse(BookingResponseDto)
@@ -117,12 +117,6 @@ export class BookingController {
     @UserSession() user: IJwtPayload,
     @Query() query: GetBookingsDto,
   ): Promise<PaginatedResponseDto<BookingResponseDto>> {
-    console.log({
-      listingId: query._listingId,
-      hostId: user._id,
-      page: query.page,
-      limit: query.limit,
-    });
     return this.getBookingsUsecase.execute(
       GetBookingsCommand.create({
         listingId: query._listingId,
@@ -133,28 +127,3 @@ export class BookingController {
     );
   }
 }
-
-/* 
-
-  _id: string;
-  checkInDate: Date;
-  checkOutDate: Date;
-  amountPaid: number;
-  bookingDate: Date;
-  modifiedDate: Date;
-  adultsGuestNum: number;
-  childrenGuestNum: number;
-  infantsGuestNum: number;
-  petsNum: number;
-  isCancelled: boolean;
-  refundPaid: number;
-  cancelDate: Date;
-  promoCode: string;
-  _userId: string;
-  _listingId: string;
-  totalPrice: number;
-  tax: number;
-  totalPriceTax: number;
-  amountDue: number;
-  refundAmount: number;
-*/

@@ -5,11 +5,25 @@ import { Booking } from './booking.schema';
 
 type BookingQuery = FilterQuery<BookingDBModel>;
 
-// type SubscriberQuery = FilterQuery<SubscriberDBModel> & EnforceEnvOrOrgIds;
-
-export class BookingRepository extends BaseRepository<BookingDBModel, BookingEntity, BookingQuery> {
+export class BookingRepository extends BaseRepository<BookingDBModel, BookingEntity, object> {
   constructor() {
     super(Booking, BookingEntity);
+  }
+
+  async findBookings(
+    listingId: string,
+    options: { limit?: number; sort?: any; skip?: number } = {},
+  ): Promise<BookingEntity[]> {
+    let query: BookingQuery = {
+      _listingId: listingId,
+    };
+    const data = await this.MongooseModel.find(query)
+      .skip(options.skip as number)
+      .limit(options.limit as number)
+      .lean()
+      .exec();
+
+    return this.mapEntities(data);
   }
 
   //check if checkIndate, checkOutDate, occupancy

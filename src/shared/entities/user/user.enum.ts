@@ -17,6 +17,8 @@ export enum BookingStatus {
   COMPLETED = 'Completed',
 }
 
+export type UserId = string;
+
 // export declare enum UserRoles {
 //   "system-admin" = "system-admin",
 //   "restaurant-admin" = "restaurant-admin",

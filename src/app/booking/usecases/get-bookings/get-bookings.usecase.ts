@@ -27,9 +27,7 @@ export class GetBookings {
 
     const totalCount = await this.bookingRepository.count(query);
 
-    console.log({ totalCount });
-
-    if (totalCount === 0) throw new NotFoundException('Dont have any booking information of listingId');
+    if (totalCount === 0) throw new NotFoundException('Dont have any booking information of ');
 
     const data = await this.bookingRepository.find(query, '', {
       limit: command.limit,

@@ -140,7 +140,7 @@ export class AuthService {
       },
       {
         expiresIn: '30 days',
-        issuer: 'novu_api',
+        issuer: 'booking_api',
       },
     );
   }
@@ -235,7 +235,7 @@ export class AuthService {
       },
       {
         expiresIn: '1 day',
-        issuer: 'novu_api',
+        issuer: 'booking_api',
         audience: 'api_token',
       },
     );
